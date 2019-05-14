@@ -13,7 +13,6 @@
 		4A1A96D1227D984600785C9C /* HandlerBusiness.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A1A96CD227D984600785C9C /* HandlerBusiness.m */; };
 		4A1EE4C82282BA5B00786DCD /* NewLUT.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A1EE4C72282BA5A00786DCD /* NewLUT.png */; };
 		4A215BF0228959D500081F61 /* SwirlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A215BEF228959D500081F61 /* SwirlFilter.m */; };
-		4A263990228A954700CBE8F9 /* CustomCamera.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A26398F228A954700CBE8F9 /* CustomCamera.m */; };
 		4A29C7572279E035002980F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A29C7552279E035002980F3 /* MainViewController.m */; };
 		4A29C7582279E035002980F3 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A29C7562279E035002980F3 /* MainViewController.xib */; };
 		4A29C75C2279E04E002980F3 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A29C75A2279E04E002980F3 /* PhotoViewController.m */; };
@@ -63,8 +62,6 @@
 		4A1EE4C72282BA5A00786DCD /* NewLUT.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NewLUT.png; sourceTree = "<group>"; };
 		4A215BEE228959D500081F61 /* SwirlFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwirlFilter.h; sourceTree = "<group>"; };
 		4A215BEF228959D500081F61 /* SwirlFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwirlFilter.m; sourceTree = "<group>"; };
-		4A26398E228A954700CBE8F9 /* CustomCamera.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomCamera.h; sourceTree = "<group>"; };
-		4A26398F228A954700CBE8F9 /* CustomCamera.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomCamera.m; sourceTree = "<group>"; };
 		4A29C7542279E034002980F3 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4A29C7552279E035002980F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4A29C7562279E035002980F3 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
@@ -192,8 +189,6 @@
 				4A29C7542279E034002980F3 /* MainViewController.h */,
 				4A29C7552279E035002980F3 /* MainViewController.m */,
 				4A29C7562279E035002980F3 /* MainViewController.xib */,
-				4A26398E228A954700CBE8F9 /* CustomCamera.h */,
-				4A26398F228A954700CBE8F9 /* CustomCamera.m */,
 				4A29C7592279E04E002980F3 /* PhotoViewController.h */,
 				4A29C75A2279E04E002980F3 /* PhotoViewController.m */,
 				4A29C7652279E05D002980F3 /* CollectionViewController.h */,
@@ -445,7 +440,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* ZZPAppDelegate.m in Sources */,
-				4A263990228A954700CBE8F9 /* CustomCamera.m in Sources */,
 				4A5686152288183C00409941 /* LutFilter.m in Sources */,
 				4A29C7662279E05D002980F3 /* CollectionViewController.m in Sources */,
 				4A29C76A2279E05D002980F3 /* MotionManager.m in Sources */,

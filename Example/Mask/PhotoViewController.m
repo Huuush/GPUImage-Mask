@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #import "LutFilter.h"
 #import "EffectShowController.h"
 #import "SwirlFilter.h"
-#import "CustomCamera.h"
+
 
 @interface PhotoViewController ()<AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate,AVCapturePhotoCaptureDelegate>
 
@@ -50,7 +50,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 //图像预览层，实时显示捕获的图像
 @property(nonatomic)AVCaptureVideoPreviewLayer *previewLayer;
-@property (nonatomic, strong) CustomCamera *captureCamera;
+@property (nonatomic, strong) GPUImageStillCamera *captureCamera;
 @property (strong, nonatomic) UIButton *PhotoButton;
 @property (strong, nonatomic) UIButton *flashButton;
 @property (strong, nonatomic) UIButton *ChangeCamera;
@@ -200,7 +200,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #pragma mark - 初始化相机
 - (void)customCamera{
     self.view.backgroundColor = [UIColor blackColor];
-    self.captureCamera = [[CustomCamera alloc] initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionBack];
+    self.captureCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionBack];
     self.captureCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     self.captureCamera.horizontallyMirrorFrontFacingCamera = YES;
     _currentFlashModel = AVCaptureFlashModeOff;
