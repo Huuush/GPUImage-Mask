@@ -84,7 +84,7 @@
     
     CompressImg * compress = [CompressImg new];
     UIImage * postimg = [compress imageWithImage:_EffectedImg scaledToSize:CGSizeMake(375, 500)];
-    self.imgData = UIImageJPEGRepresentation(postimg,0.3f);//第二个参数为压缩倍数
+    self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
     
     NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
     self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
@@ -92,7 +92,7 @@
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     session.requestSerializer = [AFJSONRequestSerializer serializer];
     NSMutableDictionary * dic = [@{
-                                   @"imgData":@"123",
+                                   @"imgData":self.dataStr,
 //                                   @"effectTag":effectTag,
                                    } mutableCopy];
     [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
