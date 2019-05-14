@@ -1,0 +1,14 @@
+
+
+
+source 'https://github.com/CocoaPods/Specs.git'  # 官方库
+
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'Mask_Example' do
+    pod 'Mask', :path => '../'
+    
+end
+

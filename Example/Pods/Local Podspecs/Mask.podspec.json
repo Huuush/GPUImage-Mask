@@ -1,0 +1,42 @@
+{
+  "name": "Mask",
+  "version": "0.1.0",
+  "summary": "A short description of CLFridgeManage.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Huuush/Mask",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Huuush": "609742482@qq.com"
+  },
+  "source": {
+    "git": "https://github.com/Huuush/Mask.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "Mask/Classes/**/*",
+  "dependencies": {
+    "Masonry": [
+      "1.1.0"
+    ],
+    "MJRefresh": [
+      "3.1.12"
+    ],
+    "YYModel": [
+      "1.0.4"
+    ],
+    "MJExtension": [
+
+    ],
+    "AFNetworking": [
+
+    ],
+    "GPUImage": [
+      "0.1.7"
+    ]
+  }
+}

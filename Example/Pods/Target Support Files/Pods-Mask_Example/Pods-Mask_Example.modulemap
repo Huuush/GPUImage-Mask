@@ -1,0 +1,6 @@
+framework module Pods_Mask_Example {
+  umbrella header "Pods-Mask_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
