@@ -62,8 +62,10 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) GPUImageView *preLayerView;
 @property (nonatomic)UIView *focusView; //对焦
 @property (nonatomic)BOOL isflashOn;
+@property (nonatomic, assign) NSInteger effectTag;
 
-@property (nonatomic, strong) GPUImageSketchFilter  *customFilter;
+//@property (nonatomic, strong) GPUImageSketchFilter  *customFilter;
+@property (nonatomic, strong) GPUImageCropFilter *rawFilter;
 @property (nonatomic, strong) LutFilter *LutFilter;
 @property (nonatomic, strong) GPUImageGaussianSelectiveBlurFilter * GaussianFilter;
 @property (nonatomic, strong) SwirlFilter *SwirlFilter;
@@ -75,8 +77,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) MotionManager *motionManager;
 
 @property (nonatomic)BOOL canCa;
-@property (nonatomic, assign) AVCaptureFlashMode currentFlashModel;
-@property (nonatomic, assign) AVCaptureFlashMode flashModel;
+
 @end
 
 @implementation PhotoViewController
@@ -144,7 +145,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.view addSubview:_preAlbum];
     [self.preAlbum mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view.mas_left).mas_offset(20);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-40);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-35);
         make.width.mas_equalTo(50);
         make.height.mas_equalTo(50);
     }];
@@ -206,7 +207,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     self.captureCamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionBack];
     self.captureCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     self.captureCamera.horizontallyMirrorFrontFacingCamera = YES;
-    _currentFlashModel = AVCaptureFlashModeOff;
     
     self.preLayerView = [[GPUImageView alloc] init];
     [self.view addSubview:_preLayerView];
@@ -218,21 +218,9 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     }];
     [self.preLayerView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
     self.preLayerView.userInteractionEnabled = YES;
-    
-    //LUT
-    GPUImageGrayscaleFilter * grayfliter = [[GPUImageGrayscaleFilter alloc] init];
-    _ContrastFilter = [[ContrastFilter alloc] init];
-    [_captureCamera addTarget:grayfliter];
-    [grayfliter addTarget:_ContrastFilter];
-    [_ContrastFilter addTarget:_preLayerView];
     // 初始化滤镜
-//    _Filter = [[GPUImageCropFilter alloc] init];
-//    [_captureCamera addTarget:_Filter];
-//    [_Filter addTarget:_preLayerView];
-    
-//    _SwirlFilter = [[SwirlFilter alloc] init];
-//    [_captureCamera addTarget:_SwirlFilter];
-//    [_SwirlFilter addTarget:_preLayerView];
+    [_captureCamera addTarget:self.rawFilter];
+    [self.rawFilter addTarget:_preLayerView];
     
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(focusGesture:)];
@@ -323,15 +311,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 //    [self.captureCamera.inputCamera unlockForConfiguration];
 }
 
-- (void)WhiteBallence{
-        if ([self.captureCamera.inputCamera lockForConfiguration:nil]) {
-            //自动白平衡
-            if ([self.captureCamera.inputCamera isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance]) {
-                [self.captureCamera.inputCamera setWhiteBalanceMode:AVCaptureWhiteBalanceModeAutoWhiteBalance];
-            }
-            [self.captureCamera.inputCamera unlockForConfiguration];
-        }
-}
+
 - (void)changeCamera{
 //    NSUInteger cameraCount = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo] count];
 //    if (cameraCount > 1) {
@@ -392,6 +372,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     NSLog(@"dianji");
     CGPoint point = [gesture locationInView:gesture.view];
     [self focusAtPoint:point];
+    self.EffectListView.hidden = YES;
 }
 
 
@@ -568,20 +549,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self presentViewController:cvc animated:YES completion:nil];
 }
 
--(void)cancle{
-//    [self.imageView removeFromSuperview];
-//    self.PhotoButton.hidden = NO;
-//    self.saveToAlbumButton.hidden = YES;
-//    self.CancelButton.hidden = YES;
-//    self.ChangeCamera.hidden = NO;
-//    self.preAlbum.hidden = NO;
-//    self.flashButton.hidden = NO;
-//    self.EffectButton.hidden = NO;
-//    [self.session startRunning];
-    //[self dismissViewControllerAnimated:YES completion:NULL];
-    //MainViewController *mVC = [[MainViewController alloc] init];
-}
-
 
 #pragma mark - 检查相机权限
 - (BOOL)canUserCamear{
@@ -623,9 +590,17 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     }
     return _LutFilter;
 }
+
+- (GPUImageCropFilter *) rawFilter{
+    if (!_rawFilter) {
+        _rawFilter = [[GPUImageCropFilter alloc] init];
+    }
+    return _rawFilter;
+}
+
 - (UIView *) EffectListView {
     if(!_EffectListView){
-        _EffectListView = [[UIView alloc] initWithFrame:CGRectMake(0, 45, APP_SCREEN_WIDTH, 100)];
+        _EffectListView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, APP_SCREEN_WIDTH, 80)];
         _EffectListView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5];
         
     }
@@ -797,7 +772,40 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _motionManager;
 }
 
+- (void) openRaw {
+    self.effectTag = 1;
+    [self.captureCamera removeAllTargets];
+    [_captureCamera addTarget:self.rawFilter];
+    [self.rawFilter addTarget:_preLayerView];
+}
 
+- (void) openShader {
+    self.effectTag = 2;
+    [self.captureCamera removeAllTargets];
+    GPUImageGrayscaleFilter * grayfliter = [[GPUImageGrayscaleFilter alloc] init];
+    _ContrastFilter = [[ContrastFilter alloc] init];
+    [_captureCamera addTarget:grayfliter];
+    [grayfliter addTarget:_ContrastFilter];
+    [_ContrastFilter addTarget:_preLayerView];
+    
+}
+
+- (void) openLut{
+    self.effectTag = 3;
+    [self.captureCamera removeAllTargets];
+    [self.captureCamera addTarget:self.LutFilter];
+    [self.LutFilter addTarget:_preLayerView];
+}
+
+- (void)WhiteBallence{
+    if ([self.captureCamera.inputCamera lockForConfiguration:nil]) {
+        //自动白平衡
+        if ([self.captureCamera.inputCamera isWhiteBalanceModeSupported:AVCaptureWhiteBalanceModeAutoWhiteBalance]) {
+            [self.captureCamera.inputCamera setWhiteBalanceMode:AVCaptureWhiteBalanceModeAutoWhiteBalance];
+        }
+        [self.captureCamera.inputCamera unlockForConfiguration];
+    }
+}
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear: animated];
