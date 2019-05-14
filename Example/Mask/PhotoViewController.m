@@ -24,14 +24,14 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 #import "PhotoViewController.h"
 #import "CollectionViewController.h"
-#import <GPUImage/GPUImage.h>
+//#import <GPUImage/GPUImage.h>
 #import "MotionManager.h"
 #import <CoreMotion/CoreMotion.h>
 #import "AFNetworking.h"
 #import "LutFilter.h"
 #import "EffectShowController.h"
 #import "SwirlFilter.h"
-
+#import "ContrastFilter.h"
 
 @interface PhotoViewController ()<AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate,AVCapturePhotoCaptureDelegate>
 
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property(nonatomic)AVCaptureSession *session;
 
 //图像预览层，实时显示捕获的图像
-@property(nonatomic)AVCaptureVideoPreviewLayer *previewLayer;
+//@property(nonatomic)AVCaptureVideoPreviewLayer *previewLayer;
 @property (nonatomic, strong) GPUImageStillCamera *captureCamera;
 @property (strong, nonatomic) UIButton *PhotoButton;
 @property (strong, nonatomic) UIButton *flashButton;
@@ -67,7 +67,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) LutFilter *LutFilter;
 @property (nonatomic, strong) GPUImageGaussianSelectiveBlurFilter * GaussianFilter;
 @property (nonatomic, strong) SwirlFilter *SwirlFilter;
-
+@property (nonatomic, strong) ContrastFilter *ContrastFilter;
 
 /* 获取屏幕方向 */
 @property (nonatomic, assign) UIDeviceOrientation orientation;
@@ -110,9 +110,9 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_PhotoButton addTarget:self action:@selector(shotPhoto) forControlEvents:UIControlEventTouchUpInside];
     [self.PhotoButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-5);
-        make.width.mas_equalTo(65);
-        make.height.mas_equalTo(65);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-20);
+        make.width.mas_equalTo(70);
+        make.height.mas_equalTo(70);
     }];
     
     //聚焦动画
@@ -129,8 +129,8 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_ChangeCamera addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_ChangeCamera];
     [self.ChangeCamera mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.view.mas_right).mas_offset(-15);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-20);
+        make.right.mas_equalTo(self.view.mas_right).mas_offset(-20);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-25);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(30);
     }];
@@ -138,10 +138,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     self.preAlbum = [[UIButton alloc] init];
     [self.preAlbum setBackgroundImage:[UIImage imageNamed:@"Latest Image Icon"] forState:UIControlStateNormal];
     [_preAlbum addTarget:self action:@selector(inToAlbum) forControlEvents:UIControlEventTouchUpInside];
+    _preAlbum.layer.cornerRadius = 5;
+    _preAlbum.layer.borderWidth = 3.0f;
+    _preAlbum.layer.borderColor = [UIColor whiteColor].CGColor;
     [self.view addSubview:_preAlbum];
     [self.preAlbum mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view.mas_left).mas_offset(10);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-20);
+        make.left.mas_equalTo(self.view.mas_left).mas_offset(20);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-40);
         make.width.mas_equalTo(50);
         make.height.mas_equalTo(50);
     }];
@@ -152,10 +155,10 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_flashButton addTarget:self action:@selector(FlashOn) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_flashButton];
     [self.flashButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view.mas_left).mas_offset(10);
-        make.top.mas_equalTo(self.view.mas_top).mas_offset(5);
-        make.width.mas_equalTo(25);
-        make.height.mas_equalTo(25);
+        make.left.mas_equalTo(self.view.mas_left).mas_offset(20);
+        make.top.mas_equalTo(self.view.mas_top).mas_offset(10);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
     }];
     
     self.EffectButton = [[UIButton alloc] init];
@@ -163,8 +166,8 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_EffectButton addTarget:self action:@selector(OpenEffectlist) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_EffectButton];
     [self.EffectButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.view.mas_right).mas_offset(-10);
-        make.top.mas_equalTo(self.view.mas_top).mas_offset(10);
+        make.right.mas_equalTo(self.view.mas_right).mas_offset(-20);
+        make.top.mas_equalTo(self.view.mas_top).mas_offset(20);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(30);
     }];
@@ -217,8 +220,11 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     self.preLayerView.userInteractionEnabled = YES;
     
     //LUT
-    [_captureCamera addTarget:self.LutFilter];
-    [self.LutFilter addTarget:_preLayerView];
+    GPUImageGrayscaleFilter * grayfliter = [[GPUImageGrayscaleFilter alloc] init];
+    _ContrastFilter = [[ContrastFilter alloc] init];
+    [_captureCamera addTarget:grayfliter];
+    [grayfliter addTarget:_ContrastFilter];
+    [_ContrastFilter addTarget:_preLayerView];
     // 初始化滤镜
 //    _Filter = [[GPUImageCropFilter alloc] init];
 //    [_captureCamera addTarget:_Filter];
@@ -265,7 +271,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     
 }
 
-#pragma mark - 曝光和对焦
+#pragma mark - 闪光灯失效
 - (void)FlashOn{
     if ([self.captureCamera inputCamera].flashMode == AVCaptureFlashModeOff)
     {
@@ -434,7 +440,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 -(void) shotPhoto{
     NSLog(@"hhh");
 //    [self setFlashModel:self.currentFlashModel];
-    [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_LutFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+    [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
 //        //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
 //        [self.motionManager startMotionManager:^(NSInteger orientation) {
 //            self.orientation = orientation;
@@ -605,11 +611,11 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 }
 
 #pragma mark - lazyload 滤镜
-- (GPUImageSketchFilter  *)customFilter {
-    if (!_customFilter) {
-        _customFilter = [[GPUImageSketchFilter alloc] init];
+- (SwirlFilter  *)SwirlFilter {
+    if (!_SwirlFilter) {
+        _SwirlFilter = [[SwirlFilter alloc] init];
     }
-    return _customFilter;
+    return _SwirlFilter;
 }
 - (LutFilter *)LutFilter {
     if (!_LutFilter) {

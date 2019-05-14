@@ -13,6 +13,9 @@
 		4A1A96D1227D984600785C9C /* HandlerBusiness.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A1A96CD227D984600785C9C /* HandlerBusiness.m */; };
 		4A1EE4C82282BA5B00786DCD /* NewLUT.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A1EE4C72282BA5A00786DCD /* NewLUT.png */; };
 		4A215BF0228959D500081F61 /* SwirlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A215BEF228959D500081F61 /* SwirlFilter.m */; };
+		4A263993228ABC2F00CBE8F9 /* ContrastFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */; };
+		4A263999228AE0A100CBE8F9 /* CompressImg.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A263998228AE0A100CBE8F9 /* CompressImg.m */; };
+		4A26399B228AE4A500CBE8F9 /* EffectShowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A26399A228AE4A500CBE8F9 /* EffectShowController.m */; };
 		4A29C7572279E035002980F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A29C7552279E035002980F3 /* MainViewController.m */; };
 		4A29C7582279E035002980F3 /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A29C7562279E035002980F3 /* MainViewController.xib */; };
 		4A29C75C2279E04E002980F3 /* PhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A29C75A2279E04E002980F3 /* PhotoViewController.m */; };
@@ -21,7 +24,6 @@
 		4A29C76A2279E05D002980F3 /* MotionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A29C7642279E05D002980F3 /* MotionManager.m */; };
 		4A2A3B3D227A8B7600209072 /* IMG_1319.JPG in Resources */ = {isa = PBXBuildFile; fileRef = 4A2A3B3C227A8B7600209072 /* IMG_1319.JPG */; };
 		4A5686152288183C00409941 /* LutFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5686142288183C00409941 /* LutFilter.m */; };
-		4A56861B22881D7E00409941 /* EffectShowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A56861A22881D7E00409941 /* EffectShowController.m */; };
 		4ACD2DD6228178AB0057CDAC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ACD2DD5228178AB0057CDAC /* OpenGLES.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
@@ -62,6 +64,11 @@
 		4A1EE4C72282BA5A00786DCD /* NewLUT.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NewLUT.png; sourceTree = "<group>"; };
 		4A215BEE228959D500081F61 /* SwirlFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwirlFilter.h; sourceTree = "<group>"; };
 		4A215BEF228959D500081F61 /* SwirlFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwirlFilter.m; sourceTree = "<group>"; };
+		4A263991228ABC2F00CBE8F9 /* ContrastFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContrastFilter.h; sourceTree = "<group>"; };
+		4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContrastFilter.m; sourceTree = "<group>"; };
+		4A263997228AE0A000CBE8F9 /* CompressImg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompressImg.h; sourceTree = "<group>"; };
+		4A263998228AE0A100CBE8F9 /* CompressImg.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompressImg.m; sourceTree = "<group>"; };
+		4A26399A228AE4A500CBE8F9 /* EffectShowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EffectShowController.m; sourceTree = "<group>"; };
 		4A29C7542279E034002980F3 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		4A29C7552279E035002980F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		4A29C7562279E035002980F3 /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
@@ -77,7 +84,6 @@
 		4A5686132288183C00409941 /* LutFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LutFilter.h; sourceTree = "<group>"; };
 		4A5686142288183C00409941 /* LutFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LutFilter.m; sourceTree = "<group>"; };
 		4A56861922881D7E00409941 /* EffectShowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EffectShowController.h; sourceTree = "<group>"; };
-		4A56861A22881D7E00409941 /* EffectShowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EffectShowController.m; sourceTree = "<group>"; };
 		4ACD2DD5228178AB0057CDAC /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		5C332B609D3B8FAC53CC1E3E /* Pods-Mask_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mask_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mask_Example/Pods-Mask_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		5F05104864A3934D07A439E6 /* Pods_Mask_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mask_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,7 +202,7 @@
 				4A29C7622279E05C002980F3 /* CollectionViewCell.h */,
 				4A29C7602279E05C002980F3 /* CollectionViewCell.m */,
 				4A56861922881D7E00409941 /* EffectShowController.h */,
-				4A56861A22881D7E00409941 /* EffectShowController.m */,
+				4A26399A228AE4A500CBE8F9 /* EffectShowController.m */,
 				4A29C7632279E05C002980F3 /* MotionManager.h */,
 				4A29C7642279E05D002980F3 /* MotionManager.m */,
 				4A5686132288183C00409941 /* LutFilter.h */,
@@ -210,6 +216,10 @@
 				4A1EE4C72282BA5A00786DCD /* NewLUT.png */,
 				4A13A10F2289D0E400A76E0D /* CartoonLUT.png */,
 				6003F594195388D20070C39A /* Supporting Files */,
+				4A263991228ABC2F00CBE8F9 /* ContrastFilter.h */,
+				4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */,
+				4A263997228AE0A000CBE8F9 /* CompressImg.h */,
+				4A263998228AE0A100CBE8F9 /* CompressImg.m */,
 			);
 			name = "Example for Mask";
 			path = Mask;
@@ -440,6 +450,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* ZZPAppDelegate.m in Sources */,
+				4A263999228AE0A100CBE8F9 /* CompressImg.m in Sources */,
 				4A5686152288183C00409941 /* LutFilter.m in Sources */,
 				4A29C7662279E05D002980F3 /* CollectionViewController.m in Sources */,
 				4A29C76A2279E05D002980F3 /* MotionManager.m in Sources */,
@@ -447,10 +458,11 @@
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				4A29C7572279E035002980F3 /* MainViewController.m in Sources */,
 				4A29C7682279E05D002980F3 /* CollectionViewCell.m in Sources */,
-				4A56861B22881D7E00409941 /* EffectShowController.m in Sources */,
 				4A1A96CF227D984600785C9C /* AHCApiClient.m in Sources */,
 				4A29C75C2279E04E002980F3 /* PhotoViewController.m in Sources */,
+				4A263993228ABC2F00CBE8F9 /* ContrastFilter.m in Sources */,
 				4A1A96D1227D984600785C9C /* HandlerBusiness.m in Sources */,
+				4A26399B228AE4A500CBE8F9 /* EffectShowController.m in Sources */,
 				4A1A96D0227D984600785C9C /* BaseHandlerBusiness.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

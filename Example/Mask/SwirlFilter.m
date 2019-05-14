@@ -8,26 +8,76 @@
 
 #import "SwirlFilter.h"
 
+#if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
 NSString *const kSwirlFragmentShaderString = SHADER_STRING
 (
+ precision lowp float;
+ 
  varying highp vec2 textureCoordinate;
  
  uniform sampler2D inputImageTexture;
-
+ uniform float intensity;
+ uniform vec3 filterColor;
  
- //原色
+ const mediump vec3 luminanceWeighting = vec3(0.2125, 0.7154, 0.0721);
+ 
  void main()
-{
-    lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
-    gl_FragColor = outputColor;
-}
+ {
+     //desat, then apply overlay blend
+     lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+     float luminance = dot(textureColor.rgb, luminanceWeighting);
+     
+     lowp vec4 desat = vec4(vec3(luminance), 1.0);
+     
+     //overlay
+     lowp vec4 outputColor = vec4(
+                                  (desat.r < 0.5 ? (2.0 * desat.r * filterColor.r) : (1.0 - 2.0 * (1.0 - desat.r) * (1.0 - filterColor.r))),
+                                  (desat.g < 0.5 ? (2.0 * desat.g * filterColor.g) : (1.0 - 2.0 * (1.0 - desat.g) * (1.0 - filterColor.g))),
+                                  (desat.b < 0.5 ? (2.0 * desat.b * filterColor.b) : (1.0 - 2.0 * (1.0 - desat.b) * (1.0 - filterColor.b))),
+                                  1.0
+                                  );
+     
+     //which is better, or are they equal?
+     gl_FragColor = vec4( mix(textureColor.rgb, outputColor.rgb, intensity), textureColor.a);
+ }
  );
+#else
+NSString *const kGPUMonochromeFragmentShaderString = SHADER_STRING
+(
+ varying vec2 textureCoordinate;
+ 
+ uniform sampler2D inputImageTexture;
+ uniform float intensity;
+ uniform vec3 filterColor;
+ 
+ const vec3 luminanceWeighting = vec3(0.2125, 0.7154, 0.0721);
+ 
+ void main()
+ {
+     //desat, then apply overlay blend
+     vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);
+     float luminance = dot(textureColor.rgb, luminanceWeighting);
+     
+     vec4 desat = vec4(vec3(luminance), 1.0);
+     
+     //overlay
+     vec4 outputColor = vec4(
+                             (desat.r < 0.5 ? (2.0 * desat.r * filterColor.r) : (1.0 - 2.0 * (1.0 - desat.r) * (1.0 - filterColor.r))),
+                             (desat.g < 0.5 ? (2.0 * desat.g * filterColor.g) : (1.0 - 2.0 * (1.0 - desat.g) * (1.0 - filterColor.g))),
+                             (desat.b < 0.5 ? (2.0 * desat.b * filterColor.b) : (1.0 - 2.0 * (1.0 - desat.b) * (1.0 - filterColor.b))),
+                             1.0
+                             );
+     
+     //which is better, or are they equal?
+     gl_FragColor = vec4( mix(textureColor.rgb, outputColor.rgb, intensity), textureColor.a);
+ }
+ );
+#endif
 
 @implementation SwirlFilter
 
-//@synthesize center = _center;
-//@synthesize radius = _radius;
-//@synthesize angle = _angle;
+@synthesize intensity = _intensity;
+@synthesize color = _color;
 
 - (instancetype)init;
 {
@@ -35,13 +85,11 @@ NSString *const kSwirlFragmentShaderString = SHADER_STRING
     {
         return nil;
     }
-//    radiusUniform = [filterProgram uniformIndex:@"radius"];
-//    angleUniform = [filterProgram uniformIndex:@"angle"];
-//    centerUniform = [filterProgram uniformIndex:@"center"];
-//
-//    self.radius = 0.5;
-//    self.angle = 1.0;
-//    self.center = CGPointMake(0.5, 0.5);
+    intensityUniform = [filterProgram uniformIndex:@"intensity"];
+    filterColorUniform = [filterProgram uniformIndex:@"filterColor"];
+    
+    self.intensity = 1.0;
+    self.color = (GPUVector4){0.6f, 0.45f, 0.3f, 1.f};
     
     return self;
 }
@@ -49,32 +97,26 @@ NSString *const kSwirlFragmentShaderString = SHADER_STRING
 #pragma mark -
 #pragma mark Accessors
 
-//- (void)setInputRotation:(GPUImageRotationMode)newInputRotation atIndex:(NSInteger)textureIndex;
-//{
-//    [super setInputRotation:newInputRotation atIndex:textureIndex];
-//    [self setCenter:self.center];
-//}
-//
-//- (void)setRadius:(CGFloat)newValue;
-//{
-//    _radius = newValue;
-//    [GPUImageContext useImageProcessingContext];
-//    [self setFloat:_radius forUniform:radiusUniform program:filterProgram];
-//}
-//
-//- (void)setAngle:(CGFloat)newValue;
-//{
-//    _angle = newValue;
-//    
-//    [self setFloat:_angle forUniform:angleUniform program:filterProgram];
-//}
-//
-//- (void)setCenter:(CGPoint)newValue;
-//{
-//    _center = newValue;
-//    
-//    CGPoint rotatedPoint = [self rotatedPoint:_center forRotation:inputRotation];
-//    [self setPoint:rotatedPoint forUniform:centerUniform program:filterProgram];
-//}
+- (void)setColor:(GPUVector4)color;
+{
+    
+    _color = color;
+    
+    [self setColorRed:color.one green:color.two blue:color.three];
+}
+
+- (void)setColorRed:(GLfloat)redComponent green:(GLfloat)greenComponent blue:(GLfloat)blueComponent;
+{
+    GPUVector3 filterColor = {redComponent, greenComponent, blueComponent};
+    
+    [self setVec3:filterColor forUniform:filterColorUniform program:filterProgram];
+}
+
+- (void)setIntensity:(CGFloat)newValue;
+{
+    _intensity = newValue;
+    
+    [self setFloat:_intensity forUniform:intensityUniform program:filterProgram];
+}
 
 @end

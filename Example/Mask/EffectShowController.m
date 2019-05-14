@@ -12,11 +12,15 @@
 #define APP_STATUS_FRAME    [UIApplication sharedApplication].statusBarFrame
 #import "EffectShowController.h"
 #import "PhotoViewController.h"
+#import "HandlerBusiness.h"
+#import "CompressImg.h"
 
 @interface EffectShowController ()
 @property(nonatomic, strong) UIButton *backBotton;
 @property(nonatomic, strong) UIButton *saveBotton;
 @property(nonatomic, strong) UIImageView *ShowView;
+@property(nonatomic, strong) NSString *dataStr;
+@property(nonatomic, strong) NSData *imgData;
 @end
 
 @implementation EffectShowController
@@ -30,26 +34,26 @@
     
     self.backBotton = [[UIButton alloc] init];
     //    self.PhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.backBotton setBackgroundImage:[UIImage imageNamed:@"Focus Icon"] forState:UIControlStateNormal];
+    [self.backBotton setBackgroundImage:[UIImage imageNamed:@"backButton"] forState:UIControlStateNormal];
     [self.view addSubview:_backBotton];
     [_backBotton addTarget:self action:@selector(backToCamera) forControlEvents:UIControlEventTouchUpInside];
     [self.backBotton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view.mas_left).mas_offset(67);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-70);
-        make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-50);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
     }];
     
     self.saveBotton = [[UIButton alloc] init];
     //    self.PhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.saveBotton setBackgroundImage:[UIImage imageNamed:@"Focus Icon"] forState:UIControlStateNormal];
+    [self.saveBotton setBackgroundImage:[UIImage imageNamed:@"saveButton"] forState:UIControlStateNormal];
     [self.view addSubview:_saveBotton];
-    [_saveBotton addTarget:self action:@selector(savePicture) forControlEvents:UIControlEventTouchUpInside];
+    [_saveBotton addTarget:self action:@selector(saveToAblum) forControlEvents:UIControlEventTouchUpInside];
     [self.saveBotton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.view.mas_right).mas_offset(-67);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-70);
-        make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-50);
+        make.width.mas_equalTo(30);
+        make.height.mas_equalTo(30);
     }];
     
     
@@ -59,9 +63,6 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void) savePicture{
-    
-}
 #pragma mark - 保存到相册和数据库  注意要根据不同tag换滤镜
 - (void) saveToAblum {
     //根据拍摄时的屏幕方向，调整图片方向
@@ -80,6 +81,27 @@
 //    }
     
     [self saveImageToPhotoAlbum:_EffectedImg];
+    
+    CompressImg * compress = [CompressImg new];
+    UIImage * postimg = [compress imageWithImage:_EffectedImg scaledToSize:CGSizeMake(375, 500)];
+    self.imgData = UIImageJPEGRepresentation(postimg,0.3f);//第二个参数为压缩倍数
+    
+    NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+    self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+    
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    session.requestSerializer = [AFJSONRequestSerializer serializer];
+    NSMutableDictionary * dic = [@{
+                                   @"imgData":@"123",
+//                                   @"effectTag":effectTag,
+                                   } mutableCopy];
+    [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"上传成功！");
+        
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"上传失败！");
+    }];
+    
     
 #pragma mark - 预览相册区域加载最新照片
     

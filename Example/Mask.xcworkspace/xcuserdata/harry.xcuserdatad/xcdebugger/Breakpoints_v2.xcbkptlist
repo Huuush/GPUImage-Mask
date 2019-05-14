@@ -429,13 +429,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Mask/PhotoViewController.m"
-            timestampString = "579511879.2700599"
+            filePath = "Mask/EffectShowController.m"
+            timestampString = "579530850.575054"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "273"
-            endingLineNumber = "273"
-            landmarkName = "-FlashOn"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "-saveToAblum"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -445,45 +445,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Mask/PhotoViewController.m"
-            timestampString = "579511879.270426"
+            filePath = "Mask/EffectShowController.m"
+            timestampString = "579530850.575441"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
-            landmarkName = "-FlashOn"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mask/PhotoViewController.m"
-            timestampString = "579511879.2706569"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "289"
-            endingLineNumber = "289"
-            landmarkName = "-FlashOn"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mask/PhotoViewController.m"
-            timestampString = "579511879.270878"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "270"
-            endingLineNumber = "270"
-            landmarkName = "-FlashOn"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "-saveToAblum"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
