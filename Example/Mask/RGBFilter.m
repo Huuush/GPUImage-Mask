@@ -56,13 +56,13 @@ NSString *const kGPUImageRGBFragmentShaderString = SHADER_STRING
     }
     
     redUniform = [filterProgram uniformIndex:@"redAdjustment"];
-    self.red = 1.0;
+    self.red = 5.0;
     
     greenUniform = [filterProgram uniformIndex:@"greenAdjustment"];
-    self.green = 1.0;
+    self.green = 5.0;
     
     blueUniform = [filterProgram uniformIndex:@"blueAdjustment"];
-    self.blue = 1.0;
+    self.blue = 0.1;
     
     return self;
 }

@@ -27,6 +27,7 @@
 		4ACD2DD6228178AB0057CDAC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ACD2DD5228178AB0057CDAC /* OpenGLES.framework */; };
 		4AEA12CD228BF68A007EB20A /* Lookuptablefilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AEA12CC228BF68A007EB20A /* Lookuptablefilter.m */; };
 		4AEA12D0228C1FB0007EB20A /* RGBFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AEA12CF228C1FB0007EB20A /* RGBFilter.m */; };
+		4AEA12D3228C23E2007EB20A /* SaturationFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AEA12D2228C23E2007EB20A /* SaturationFilter.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -91,6 +92,8 @@
 		4AEA12CC228BF68A007EB20A /* Lookuptablefilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Lookuptablefilter.m; sourceTree = "<group>"; };
 		4AEA12CE228C1FB0007EB20A /* RGBFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RGBFilter.h; sourceTree = "<group>"; };
 		4AEA12CF228C1FB0007EB20A /* RGBFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RGBFilter.m; sourceTree = "<group>"; };
+		4AEA12D1228C23E2007EB20A /* SaturationFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SaturationFilter.h; sourceTree = "<group>"; };
+		4AEA12D2228C23E2007EB20A /* SaturationFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SaturationFilter.m; sourceTree = "<group>"; };
 		5C332B609D3B8FAC53CC1E3E /* Pods-Mask_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Mask_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Mask_Example/Pods-Mask_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		5F05104864A3934D07A439E6 /* Pods_Mask_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Mask_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* Mask_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mask_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,10 +216,14 @@
 				4A29C7642279E05D002980F3 /* MotionManager.m */,
 				4A5686132288183C00409941 /* LutFilter.h */,
 				4A5686142288183C00409941 /* LutFilter.m */,
+				4AEA12CB228BF68A007EB20A /* Lookuptablefilter.h */,
+				4AEA12CC228BF68A007EB20A /* Lookuptablefilter.m */,
 				4A263991228ABC2F00CBE8F9 /* ContrastFilter.h */,
 				4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */,
 				4AEA12CE228C1FB0007EB20A /* RGBFilter.h */,
 				4AEA12CF228C1FB0007EB20A /* RGBFilter.m */,
+				4AEA12D1228C23E2007EB20A /* SaturationFilter.h */,
+				4AEA12D2228C23E2007EB20A /* SaturationFilter.m */,
 				4A215BEE228959D500081F61 /* SwirlFilter.h */,
 				4A215BEF228959D500081F61 /* SwirlFilter.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
@@ -225,8 +232,6 @@
 				4A2A3B3C227A8B7600209072 /* IMG_1319.JPG */,
 				4A1EE4C72282BA5A00786DCD /* NewLUT.png */,
 				4A13A10F2289D0E400A76E0D /* CartoonLUT.png */,
-				4AEA12CB228BF68A007EB20A /* Lookuptablefilter.h */,
-				4AEA12CC228BF68A007EB20A /* Lookuptablefilter.m */,
 				6003F594195388D20070C39A /* Supporting Files */,
 				4A263997228AE0A000CBE8F9 /* CompressImg.h */,
 				4A263998228AE0A100CBE8F9 /* CompressImg.m */,
@@ -476,6 +481,7 @@
 				4A26399B228AE4A500CBE8F9 /* EffectShowController.m in Sources */,
 				4A1A96D0227D984600785C9C /* BaseHandlerBusiness.m in Sources */,
 				4AEA12D0228C1FB0007EB20A /* RGBFilter.m in Sources */,
+				4AEA12D3228C23E2007EB20A /* SaturationFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

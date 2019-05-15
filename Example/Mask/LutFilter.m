@@ -7,6 +7,7 @@
 //
 
 #import "LutFilter.h"
+#import "Lookuptablefilter.h"
 
 @implementation LutFilter
 
@@ -23,10 +24,10 @@
     NSImage *image = [NSImage imageNamed:@"NewLUT.png"];
 #endif
     
-    NSAssert(image, @"To use GPUImageAmatorkaFilter you need to add lookup_amatorka.png from GPUImage/framework/Resources to your application bundle.");
+//    NSAssert(image, @"To use GPUImageAmatorkaFilter you need to add lookup_amatorka.png from GPUImage/framework/Resources to your application bundle.");
     
     lookupImageSource = [[GPUImagePicture alloc] initWithImage:image];
-    GPUImageLookupFilter *lookupFilter = [[GPUImageLookupFilter alloc] init];
+    Lookuptablefilter *lookupFilter = [[Lookuptablefilter alloc] init];
     [self addFilter:lookupFilter];
     
     [lookupImageSource addTarget:lookupFilter atTextureLocation:1];

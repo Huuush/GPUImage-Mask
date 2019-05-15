@@ -31,6 +31,8 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #import "EffectShowController.h"
 #import "SwirlFilter.h"
 #import "ContrastFilter.h"
+#import "RGBFilter.h"
+#import "SaturationFilter.h"
 
 @interface PhotoViewController ()<AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate,AVCapturePhotoCaptureDelegate>
 
@@ -65,6 +67,8 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) GPUImageCropFilter *rawFilter;
 @property (nonatomic, strong) LutFilter *LutFilter;
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
+@property (nonatomic, strong) RGBFilter *RGBFilter;
+@property (nonatomic, strong) SaturationFilter *SaturationFilter;
 
 /* 获取屏幕方向 */
 @property (nonatomic, assign) UIDeviceOrientation orientation;
@@ -492,12 +496,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             NSLog(@"设备方向：%ld",orientation);
         }];
         //开始图像处理
-#pragma mark - LUT滤镜
-//        if (tag == 1) {
-//        }
-        
-        
-#pragma mark - 手绘滤镜
 //        GPUImagePicture *sourcePicture = [[GPUImagePicture alloc] initWithImage:_image];
 //
 ////        //渲染图片
@@ -560,6 +558,17 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
         make.height.mas_equalTo(50);
     }];
     
+    UIButton *outRedBotton = [[UIButton alloc] init];
+    [outRedBotton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
+    [self.EffectListView addSubview:outRedBotton];
+    [outRedBotton addTarget:self action:@selector(openOutRed) forControlEvents:UIControlEventTouchUpInside];
+    [outRedBotton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(lutBotton.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(10);
+        make.width.mas_equalTo(50);
+        make.height.mas_equalTo(50);
+    }];
+    
     if (_EffectListView.hidden == NO) {
         _EffectListView.hidden = YES;
     }
@@ -615,6 +624,20 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
         _rawFilter = [[GPUImageCropFilter alloc] init];
     }
     return _rawFilter;
+}
+
+- (RGBFilter * ) RGBFilter{
+    if (!_RGBFilter) {
+        _RGBFilter = [[RGBFilter alloc] init];
+    }
+    return _RGBFilter;
+}
+
+-(SaturationFilter *) SaturationFilter{
+    if (!_SaturationFilter) {
+        _SaturationFilter = [[SaturationFilter alloc] init];
+    }
+    return _SaturationFilter;
 }
 
 - (UIView *) EffectListView {
@@ -791,6 +814,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _motionManager;
 }
 
+#pragma mark - 选择滤镜
 - (void) openRaw {
     self.effectTag = 1;
     [self.captureCamera removeAllTargets];
@@ -814,6 +838,14 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.captureCamera removeAllTargets];
     [self.captureCamera addTarget:self.LutFilter];
     [self.LutFilter addTarget:_preLayerView];
+}
+
+- (void) openOutRed{
+    self.effectTag = 4;
+    [self.captureCamera removeAllTargets];
+    [self.captureCamera addTarget:self.RGBFilter];
+    [self.RGBFilter addTarget:self.SaturationFilter];
+    [self.SaturationFilter addTarget:_preLayerView];
 }
 
 - (void)WhiteBallence{
