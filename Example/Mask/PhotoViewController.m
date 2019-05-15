@@ -24,7 +24,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 #import "PhotoViewController.h"
 #import "CollectionViewController.h"
-//#import <GPUImage/GPUImage.h>
 #import "MotionManager.h"
 #import <CoreMotion/CoreMotion.h>
 #import "AFNetworking.h"
@@ -58,17 +57,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (strong, nonatomic) UIButton *CancelButton;
 @property (strong, nonatomic) UIButton *saveToAlbumButton;
 @property (nonatomic, strong) UIView *EffectListView;
-@property (nonatomic)UIImageView *imageView;
+//@property (nonatomic)UIImageView *imageView;
 @property (nonatomic, strong) GPUImageView *preLayerView;
 @property (nonatomic)UIView *focusView; //对焦
 @property (nonatomic)BOOL isflashOn;
-@property (nonatomic, assign) NSInteger effectTag;
 
-//@property (nonatomic, strong) GPUImageSketchFilter  *customFilter;
 @property (nonatomic, strong) GPUImageCropFilter *rawFilter;
 @property (nonatomic, strong) LutFilter *LutFilter;
-@property (nonatomic, strong) GPUImageGaussianSelectiveBlurFilter * GaussianFilter;
-@property (nonatomic, strong) SwirlFilter *SwirlFilter;
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
 
 /* 获取屏幕方向 */
@@ -87,7 +82,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     _canCa = [self canUserCamear];
     self.image = [UIImage new];
     if (_canCa) {
-
+        
         [self customCamera];
         [self customUI];
     
@@ -219,6 +214,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.preLayerView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
     self.preLayerView.userInteractionEnabled = YES;
     // 初始化滤镜
+    self.effectTag = 1;
     [_captureCamera addTarget:self.rawFilter];
     [self.rawFilter addTarget:_preLayerView];
     
@@ -420,22 +416,50 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #pragma mark - GPUImage拍照
 -(void) shotPhoto{
     NSLog(@"hhh");
-//    [self setFlashModel:self.currentFlashModel];
-    [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
-//        //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
-//        [self.motionManager startMotionManager:^(NSInteger orientation) {
-//            self.orientation = orientation;
-//            NSLog(@"设备方向：%ld",orientation);
-//        }];
-//        [self.captureCamera setFlashModel:self.currentFlashModel];
-        _image = processedImage;
-        
-//            self.takePhotoBtn.userInteractionEnabled = YES;
-        EffectShowController *evc = [[EffectShowController alloc] init];
-        evc.EffectedImg = _image;
-        [self.navigationController pushViewController:evc animated:YES];
-        
-    }];
+    if (self.effectTag == 1) {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_rawFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+//                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+//                [self.motionManager startMotionManager:^(NSInteger orientation) {
+//                self.orientation = orientation;
+//                NSLog(@"设备方向：%ld",orientation);
+//                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }
+    else if(self.effectTag == 2)
+    {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
+            //                self.orientation = orientation;
+            //                NSLog(@"设备方向：%ld",orientation);
+            //                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }else if(self.effectTag == 2)
+    {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_LutFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
+            //                self.orientation = orientation;
+            //                NSLog(@"设备方向：%ld",orientation);
+            //                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }
+    
     
     [self.captureCamera stopCameraCapture];
     
@@ -546,6 +570,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 -(void) inToAlbum{
     CollectionViewController *cvc = [[CollectionViewController alloc] init];
+    cvc.effectTag = _effectTag;
     [self presentViewController:cvc animated:YES completion:nil];
 }
 
@@ -578,12 +603,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 }
 
 #pragma mark - lazyload 滤镜
-- (SwirlFilter  *)SwirlFilter {
-    if (!_SwirlFilter) {
-        _SwirlFilter = [[SwirlFilter alloc] init];
-    }
-    return _SwirlFilter;
-}
 - (LutFilter *)LutFilter {
     if (!_LutFilter) {
         _LutFilter = [[LutFilter alloc] init];
@@ -609,22 +628,22 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 
 //重置图片方向
-- (void)resetImageWithOrientation:(UIImageOrientation)imageOrientation {
-    
-    //横屏拍摄的时候，旋转图片
-    UIImage *image = [UIImage imageWithCGImage:_image.CGImage scale:1.0 orientation:imageOrientation];
-    _imageView.image = image;
-    
-    //将横屏拍摄的图片旋转至竖屏，并调整imageview的尺寸
-    CGFloat width = self.view.frame.size.width;
-    
-    CGFloat height = image.size.height * width / image.size.width;
-    CGRect frame = _imageView.frame;
-    frame.size.height = height;
-    _imageView.frame = frame;
-    _imageView.center = self.view.center;
-    
-}
+//- (void)resetImageWithOrientation:(UIImageOrientation)imageOrientation {
+//
+//    //横屏拍摄的时候，旋转图片
+//    UIImage *image = [UIImage imageWithCGImage:_image.CGImage scale:1.0 orientation:imageOrientation];
+//    _imageView.image = image;
+//
+//    //将横屏拍摄的图片旋转至竖屏，并调整imageview的尺寸
+//    CGFloat width = self.view.frame.size.width;
+//
+//    CGFloat height = image.size.height * width / image.size.width;
+//    CGRect frame = _imageView.frame;
+//    frame.size.height = height;
+//    _imageView.frame = frame;
+//    _imageView.center = self.view.center;
+//
+//}
 
 //修正图片方向
 //- (UIImage *)image:(UIImage *)image rotation:(UIImageOrientation)orientation

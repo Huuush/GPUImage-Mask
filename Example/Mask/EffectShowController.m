@@ -92,12 +92,12 @@
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     session.requestSerializer = [AFJSONRequestSerializer serializer];
     NSMutableDictionary * dic = [@{
+                                   @"userId":@"1",
                                    @"imgData":self.dataStr,
-//                                   @"effectTag":effectTag,
+                                   @"effectTag":@(self.effectTag),
                                    } mutableCopy];
     [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"上传成功！");
-        
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"上传失败！");
     }];

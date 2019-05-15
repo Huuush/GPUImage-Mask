@@ -12,7 +12,7 @@
 @interface HandlerBusiness : NSObject
 
 /**
- *  Post调用接口 -
+ *  GET调用接口 -
  */
 +(void)AFNGETServiceWithApicode:(NSString*)apicode Parameters:(NSDictionary*)parameters Success:(ApiSuccessBlock)success Failed:(ApiFailedBlock)failed Complete:(ApiCompleteBlock)complete;
 

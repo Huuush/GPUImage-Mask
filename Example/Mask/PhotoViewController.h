@@ -15,5 +15,6 @@
 
 @property (nonatomic)UIImage *image;
 @property (strong, nonatomic) UIButton *preAlbum;
+@property (nonatomic, assign) NSInteger effectTag;
 
 @end

@@ -13,8 +13,9 @@
 
 #import "CollectionViewCell.h"
 #import "AFNetworking.h"
-
+#import "HandlerBusiness.h"
 @implementation CollectionViewCell
+
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -26,12 +27,10 @@
 - (instancetype)initWithFrame:(CGRect)frame{
     //获取到self的frame
     self = [super initWithFrame:frame];
-//    if (self != nil) {
-    
+
     self.itemImage = [[UIImageView alloc] init];
     self.itemImage.frame = CGRectMake(0, 0, self.contentView.bounds.size.width, self.contentView.bounds.size.height);
-    UIImage * i = [UIImage imageNamed:@"IMG_1319.JPG"];
-    _itemImage.image = i;
+    
     [self addSubview:self.itemImage];
     return self;
 }

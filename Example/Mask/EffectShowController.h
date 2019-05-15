@@ -11,5 +11,6 @@
 @interface EffectShowController : UIViewController
 
 @property (nonatomic, strong) UIImage * EffectedImg;
+@property (nonatomic, assign) NSInteger effectTag;
 
 @end

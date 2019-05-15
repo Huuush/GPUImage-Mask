@@ -10,13 +10,13 @@
 #import "YYModel.h"
 #import "sys/utsname.h"
 
-#define baseAHCURLString  @"http://127.0.0.1:3000"
+#define baseAHCURLString  @"http://172.20.10.3:3000"
 
 @implementation HandlerBusiness
 
 +(void)AFNGETServiceWithApicode:(NSString*)apicode Parameters:(NSDictionary*)parameters Success:(ApiSuccessBlock)success Failed:(ApiFailedBlock)failed Complete:(ApiCompleteBlock)complete
 {
-    [BaseHandlerBusiness PostServiceWithBaseUrl:baseAHCURLString Apicode:apicode Parameters:parameters Success:success Failed:failed Complete:complete];
+    [BaseHandlerBusiness GETServiceWithBaseUrl:baseAHCURLString Apicode:apicode Parameters:parameters Success:success Failed:failed Complete:complete];
 }
 
 @end

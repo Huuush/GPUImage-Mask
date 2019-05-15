@@ -13,5 +13,5 @@
 @property (nonatomic, strong) UIButton * backToCameraButton;
 @property (nonatomic, strong) UIButton * inputPhotoButton;
 @property (nonatomic, strong) UIButton * DeletePhoto;
-
+@property (nonatomic, assign) NSInteger effectTag;
 @end

@@ -17,12 +17,13 @@
 #import "HandlerBusiness.h"
 
 
-@interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>{
+@interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+{
     
     UICollectionView * _collectionView;
 }
-
-
+@property (nonatomic, strong) NSData *imgData;
+@property (nonatomic, strong) NSMutableArray *imgdataArr;
 @end
 
 @implementation CollectionViewController
@@ -50,8 +51,14 @@
 }
 
 - (void)loadData{
-    [HandlerBusiness AFNGETServiceWithApicode:@"/inputImage" Parameters:nil Success:^(id data, id msg) {
-        NSLog(@"");
+    
+    [HandlerBusiness AFNGETServiceWithApicode:@"/inputImage" Parameters:nil Success:^(NSArray * dataArr, id msg) {
+        NSLog(@"加载成功");
+        for (int i = 0 ; i < dataArr.count; i++) {
+            _imgData = [[NSData alloc] initWithBase64EncodedString:[dataArr[i] valueForKey:@"imagedata"] options:0];
+            [self.imgdataArr addObject:_imgData];
+        }
+        [_collectionView reloadData];
     } Failed:^(NSString *error, NSString *errorDescription) {
         NSLog(@"");
     } Complete:^{
@@ -101,7 +108,7 @@
         make.height.mas_equalTo(30);
     }];
 }
-
+//pickimage
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(nullable NSDictionary<NSString *,id> *)editingInfo{
     
 }
@@ -110,16 +117,18 @@
     
     CollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid" forIndexPath:indexPath];
     
+    cell.itemImage.image = [UIImage imageWithData:self.imgdataArr[indexPath.row]];
+    
     return cell;
 }
-
+//点击放大图片
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
 }
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return 20;
+    return _imgdataArr.count;
 }
 
 
@@ -139,6 +148,13 @@
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 10;
+}
+
+- (NSMutableArray *) imgdataArr{
+    if (!_imgdataArr) {
+        _imgdataArr = [[NSMutableArray alloc] init];
+    }
+    return _imgdataArr;
 }
 
 - (BOOL)prefersStatusBarHidden

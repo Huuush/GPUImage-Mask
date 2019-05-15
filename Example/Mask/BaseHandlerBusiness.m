@@ -15,7 +15,7 @@ static dispatch_once_t onceTokenReal;
 
 @implementation BaseHandlerBusiness
 
-+ (void)PostServiceWithBaseUrl:(NSString *)baseUrl Apicode:(NSString*)apicode Parameters:(NSDictionary*)parameters Success:(ApiSuccessBlock)success Failed:(ApiFailedBlock)failed Complete:(ApiCompleteBlock)complete{
++ (void)GETServiceWithBaseUrl:(NSString *)baseUrl Apicode:(NSString*)apicode Parameters:(NSDictionary*)parameters Success:(ApiSuccessBlock)success Failed:(ApiFailedBlock)failed Complete:(ApiCompleteBlock)complete{
     
     dispatch_once(&onceTokenReal, ^{
         _sharedReal = [[BaseHandlerBusiness alloc] init];

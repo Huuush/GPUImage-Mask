@@ -26,7 +26,7 @@ typedef void (^ApiSuccessBlock)(id data , id msg);
  */
 typedef void (^ApiFailedBlock)(NSString * error ,NSString * errorDescription);
 
-+ (void)PostServiceWithBaseUrl:(NSString *)baseUrl Apicode:(NSString*)apicode Parameters:(NSDictionary*)parameters Success:(ApiSuccessBlock)success Failed:(ApiFailedBlock)failed Complete:(ApiCompleteBlock)complete;
++ (void)GETServiceWithBaseUrl:(NSString *)baseUrl Apicode:(NSString*)apicode Parameters:(NSDictionary*)parameters Success:(ApiSuccessBlock)success Failed:(ApiFailedBlock)failed Complete:(ApiCompleteBlock)complete;
 
 
 @end
