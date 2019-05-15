@@ -21,6 +21,7 @@
 @property(nonatomic, strong) UIImageView *ShowView;
 @property(nonatomic, strong) NSString *dataStr;
 @property(nonatomic, strong) NSData *imgData;
+@property(nonatomic, strong) UIImpactFeedbackGenerator *feedback;
 @end
 
 @implementation EffectShowController
@@ -100,6 +101,7 @@
         NSLog(@"上传成功！");
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"上传失败！");
+        [self.feedBack impactOccurred];
         [self.navigationController popViewControllerAnimated:YES];
     }];
     
@@ -132,6 +134,13 @@
                                           cancelButtonTitle:@"确定"
                                           otherButtonTitles:nil];
     [alert show];
+}
+
+- (UIImpactFeedbackGenerator *) feedback{
+    if (!_feedback) {
+        _feedback = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+    }
+    return _feedback;
 }
 
 - (void) viewWillAppear:(BOOL)animated{

@@ -27,8 +27,10 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #import "MotionManager.h"
 #import <CoreMotion/CoreMotion.h>
 #import "AFNetworking.h"
-#import "LutFilter.h"
 #import "EffectShowController.h"
+#import "editRawViewController.h"
+
+#import "LutFilter.h"
 #import "SwirlFilter.h"
 #import "ContrastFilter.h"
 #import "RGBFilter.h"
@@ -63,6 +65,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) GPUImageView *preLayerView;
 @property (nonatomic)UIView *focusView; //对焦
 @property (nonatomic)BOOL isflashOn;
+@property (nonatomic, strong) UIImpactFeedbackGenerator * feedBack;
 
 @property (nonatomic, strong) GPUImageCropFilter *rawFilter;
 @property (nonatomic, strong) LutFilter *LutFilter;
@@ -107,6 +110,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 //    self.PhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.PhotoButton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
     [self.view addSubview:_PhotoButton];
+    [self.feedBack prepare];
     [_PhotoButton addTarget:self action:@selector(shotPhoto) forControlEvents:UIControlEventTouchUpInside];
     [self.PhotoButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view.mas_centerX);
@@ -420,7 +424,11 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #pragma mark - GPUImage拍照
 -(void) shotPhoto{
     NSLog(@"hhh");
-    if (self.effectTag == 1) {
+
+    [self.feedBack impactOccurred];
+
+    if (self.effectTag == 1)
+    {
         [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.rawFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
 //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
 //                [self.motionManager startMotionManager:^(NSInteger orientation) {
@@ -431,11 +439,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             EffectShowController *evc = [[EffectShowController alloc] init];
             evc.EffectedImg = _image;
             evc.effectTag = _effectTag;
+
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
     else if(self.effectTag == 2)
     {
+
         [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
@@ -446,11 +456,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             EffectShowController *evc = [[EffectShowController alloc] init];
             evc.EffectedImg = _image;
             evc.effectTag = _effectTag;
+
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
     else if(self.effectTag == 3)
     {
+
         [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.LutFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
@@ -461,11 +473,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             EffectShowController *evc = [[EffectShowController alloc] init];
             evc.EffectedImg = _image;
             evc.effectTag = _effectTag;
+
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
     else if(self.effectTag == 4)
     {
+
         [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.SaturationFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
@@ -479,6 +493,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
+    
     [self.captureCamera stopCameraCapture];
     
 }
@@ -663,6 +678,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _EffectListView;
 }
 
+- (UIImpactFeedbackGenerator *) feedBack{
+    if (!_feedBack) {
+        _feedBack = [[UIImpactFeedbackGenerator alloc] initWithStyle:UIImpactFeedbackStyleLight];
+    }
+    return _feedBack;
+}
 
 //重置图片方向
 //- (void)resetImageWithOrientation:(UIImageOrientation)imageOrientation {
@@ -831,6 +852,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #pragma mark - 选择滤镜
 - (void) openRaw {
     self.effectTag = 1;
+    [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     [_captureCamera addTarget:self.rawFilter];
     [self.rawFilter addTarget:_preLayerView];
@@ -838,6 +860,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openShader {
     self.effectTag = 2;
+    [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     GPUImageGrayscaleFilter * grayfliter = [[GPUImageGrayscaleFilter alloc] init];
     _ContrastFilter = [[ContrastFilter alloc] init];
@@ -849,6 +872,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openLut{
     self.effectTag = 3;
+    [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     [self.captureCamera addTarget:self.LutFilter];
     [self.LutFilter addTarget:_preLayerView];
@@ -856,6 +880,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openOutRed{
     self.effectTag = 4;
+    [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     [self.captureCamera addTarget:self.RGBFilter];
     [self.RGBFilter addTarget:self.SaturationFilter];
