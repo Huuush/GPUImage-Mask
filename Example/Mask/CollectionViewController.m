@@ -51,8 +51,10 @@
 }
 
 - (void)loadData{
-    
-    [HandlerBusiness AFNGETServiceWithApicode:@"/inputImage" Parameters:nil Success:^(NSArray * dataArr, id msg) {
+    NSDictionary *getfordata = @{
+                              @"effecttag":@(self.effectTag)
+                               };
+    [HandlerBusiness AFNGETServiceWithApicode:@"/inputImage" Parameters:getfordata Success:^(NSArray * dataArr, id msg) {
         NSLog(@"加载成功");
         for (int i = 0 ; i < dataArr.count; i++) {
             _imgData = [[NSData alloc] initWithBase64EncodedString:[dataArr[i] valueForKey:@"imagedata"] options:0];

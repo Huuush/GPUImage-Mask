@@ -100,6 +100,7 @@
         NSLog(@"上传成功！");
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"上传失败！");
+        [self.navigationController popViewControllerAnimated:YES];
     }];
     
     

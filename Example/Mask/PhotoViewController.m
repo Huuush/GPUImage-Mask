@@ -421,7 +421,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 -(void) shotPhoto{
     NSLog(@"hhh");
     if (self.effectTag == 1) {
-        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_rawFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.rawFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
 //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
 //                [self.motionManager startMotionManager:^(NSInteger orientation) {
 //                self.orientation = orientation;
@@ -436,21 +436,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     }
     else if(self.effectTag == 2)
     {
-        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
-            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
-            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
-            //                self.orientation = orientation;
-            //                NSLog(@"设备方向：%ld",orientation);
-            //                }];
-            _image = processedImage;
-            EffectShowController *evc = [[EffectShowController alloc] init];
-            evc.EffectedImg = _image;
-            evc.effectTag = _effectTag;
-            [self.navigationController pushViewController:evc animated:YES];
-        }];
-    }else if(self.effectTag == 2)
-    {
-        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:_LutFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
             //                self.orientation = orientation;
@@ -463,8 +449,36 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
-    
-    
+    else if(self.effectTag == 3)
+    {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.LutFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
+            //                self.orientation = orientation;
+            //                NSLog(@"设备方向：%ld",orientation);
+            //                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }
+    else if(self.effectTag == 4)
+    {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.SaturationFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
+            //                self.orientation = orientation;
+            //                NSLog(@"设备方向：%ld",orientation);
+            //                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }
     [self.captureCamera stopCameraCapture];
     
 }

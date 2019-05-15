@@ -415,14 +415,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pods/GPUImage/framework/Source/GPUImageLookupFilter.m"
-            timestampString = "579612528.757308"
+            filePath = "Mask/EffectShowController.m"
+            timestampString = "579618014.728911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
-            landmarkName = "-init"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
+            landmarkName = "-saveToAblum"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[EffectShowController saveToAblum]"
+                  moduleName = "Mask_Example"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/harry/Test/GPUImage-Mask/Example/Mask/EffectShowController.m"
+                  timestampString = "579618014.8295521"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "99"
+                  endingLineNumber = "99"
+                  offsetFromSymbolStart = "940">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__35-[EffectShowController saveToAblum]_block_invoke"
+                  moduleName = "Mask_Example"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/harry/Test/GPUImage-Mask/Example/Mask/EffectShowController.m"
+                  timestampString = "579618014.830809"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "100"
+                  endingLineNumber = "100"
+                  offsetFromSymbolStart = "72">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
