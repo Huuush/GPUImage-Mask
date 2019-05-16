@@ -29,12 +29,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #import "AFNetworking.h"
 #import "EffectShowController.h"
 #import "editRawViewController.h"
-
 #import "LutFilter.h"
 #import "SwirlFilter.h"
 #import "ContrastFilter.h"
 #import "RGBFilter.h"
 #import "SaturationFilter.h"
+
+#import "HueFilter.h"
 
 @interface PhotoViewController ()<AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate,AVCapturePhotoCaptureDelegate>
 
@@ -72,7 +73,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
 @property (nonatomic, strong) RGBFilter *RGBFilter;
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
-
+@property (nonatomic, strong) HueFilter *hueFilter;
 /* 获取屏幕方向 */
 @property (nonatomic, assign) UIDeviceOrientation orientation;
 /* 陀螺仪管理 */
@@ -134,7 +135,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.view addSubview:_ChangeCamera];
     [self.ChangeCamera mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.view.mas_right).mas_offset(-20);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-25);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-30);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(30);
     }];
@@ -148,7 +149,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.view addSubview:_preAlbum];
     [self.preAlbum mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view.mas_left).mas_offset(20);
-        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-35);
+        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-30);
         make.width.mas_equalTo(50);
         make.height.mas_equalTo(50);
     }];
@@ -480,7 +481,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     else if(self.effectTag == 4)
     {
 
-        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.SaturationFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.hueFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
             //                self.orientation = orientation;
@@ -882,9 +883,10 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     self.effectTag = 4;
     [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
-    [self.captureCamera addTarget:self.RGBFilter];
-    [self.RGBFilter addTarget:self.SaturationFilter];
-    [self.SaturationFilter addTarget:_preLayerView];
+    _hueFilter = [HueFilter new];
+    [self.captureCamera addTarget:_hueFilter];
+//    [HueFilter addTarget:self.SaturationFilter];
+    [_hueFilter addTarget:_preLayerView];
 }
 
 - (void)WhiteBallence{

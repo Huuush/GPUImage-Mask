@@ -10,18 +10,23 @@
 #define APP_SCREEN_HEIGHT   (APP_SCREEN_BOUNDS.size.height)
 #define APP_SCREEN_WIDTH    (APP_SCREEN_BOUNDS.size.width)
 #define APP_STATUS_FRAME    [UIApplication sharedApplication].statusBarFrame
+
 #import "EffectShowController.h"
 #import "PhotoViewController.h"
 #import "HandlerBusiness.h"
 #import "CompressImg.h"
-
+//#import "GPUImageUIElement.h"
+#import "GPUImage.h"
 @interface EffectShowController ()
 @property(nonatomic, strong) UIButton *backBotton;
 @property(nonatomic, strong) UIButton *saveBotton;
 @property(nonatomic, strong) UIImageView *ShowView;
 @property(nonatomic, strong) NSString *dataStr;
 @property(nonatomic, strong) NSData *imgData;
+@property(nonatomic, strong) UILabel *TimeLabel;
+@property(nonatomic, strong) GPUImageUIElement *watermask;
 @property(nonatomic, strong) UIImpactFeedbackGenerator *feedback;
+@property(nonatomic, strong) UIImage *compeletedimg;
 @end
 
 @implementation EffectShowController
@@ -81,6 +86,7 @@
 //            break;
 //    }
     
+    
     [self saveImageToPhotoAlbum:_EffectedImg];
     
     CompressImg * compress = [CompressImg new];
@@ -101,14 +107,38 @@
         NSLog(@"上传成功！");
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"上传失败！");
-        [self.feedBack impactOccurred];
+        [self.feedback impactOccurred];
         [self.navigationController popViewControllerAnimated:YES];
     }];
-    
-    
+
 #pragma mark - 预览相册区域加载最新照片
     
 }
+
+//添加文字水印到指定图片上
++(UIImage *)addWaterText:(NSString *)text Attributes:(NSDictionary*)atts toImage:(UIImage *)img rect:(CGRect)rect{
+    
+    CGFloat height = img.size.height;
+    CGFloat width = img.size.width;
+    //开启一个图形上下文
+    UIGraphicsBeginImageContext(img.size);
+    
+    //在图片上下文中绘制图片
+    [img drawInRect:CGRectMake(0, 0,width,height)];
+    
+    //在图片的指定位置绘制文字   -- 7.0以后才有这个方法
+    [text drawInRect:rect withAttributes:atts];
+    
+    //从图形上下文拿到最终的图片
+    UIImage *newImg = UIGraphicsGetImageFromCurrentImageContext();
+    
+    //关闭图片上下文
+    UIGraphicsEndImageContext();
+    
+    return newImg;
+}
+
+
 
 #pragma - 保存至相册
 - (void)saveImageToPhotoAlbum:(UIImage*)savedImage
@@ -134,6 +164,36 @@
                                           cancelButtonTitle:@"确定"
                                           otherButtonTitles:nil];
     [alert show];
+}
+
+- (GPUImageUIElement *) watermask {
+    if (!_watermask) {
+        
+        UIView *view = [[UIView alloc] initWithFrame:self.view.bounds];
+        [view addSubview:self.TimeLabel];
+        _watermask = [[GPUImageUIElement alloc] initWithView:view];
+        
+    }
+    return _watermask;
+}
+
+-(UILabel *) TimeLabel{
+    if (!_TimeLabel) {
+        _TimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0 , 330, 90, 20)];
+        _TimeLabel.text = @"ddd";
+        _TimeLabel.font = [UIFont systemFontOfSize:20];
+        _TimeLabel.textColor = [UIColor orangeColor];
+        _TimeLabel.backgroundColor = [UIColor clearColor];
+        _TimeLabel.transform = CGAffineTransformMakeRotation(M_PI/2);
+    }
+    return _TimeLabel;
+}
+
+- (UIImage *) compeletedimg{
+    if (!_compeletedimg) {
+        _compeletedimg = [[UIImage alloc] init];
+    }
+    return _compeletedimg;
 }
 
 - (UIImpactFeedbackGenerator *) feedback{

@@ -12,8 +12,7 @@
 #define APP_STATUS_FRAME    [UIApplication sharedApplication].statusBarFrame
 
 #import "CollectionViewCell.h"
-#import "AFNetworking.h"
-#import "HandlerBusiness.h"
+
 @implementation CollectionViewCell
 
 

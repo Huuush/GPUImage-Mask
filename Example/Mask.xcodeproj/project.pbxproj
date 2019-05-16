@@ -12,6 +12,16 @@
 		4A1A96D0227D984600785C9C /* BaseHandlerBusiness.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A1A96CA227D984600785C9C /* BaseHandlerBusiness.m */; };
 		4A1A96D1227D984600785C9C /* HandlerBusiness.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A1A96CD227D984600785C9C /* HandlerBusiness.m */; };
 		4A1EE4C82282BA5B00786DCD /* NewLUT.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A1EE4C72282BA5A00786DCD /* NewLUT.png */; };
+		4A20E45A228D36F70036E919 /* PhotoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E459228D36F70036E919 /* PhotoManager.m */; };
+		4A20E45D228D40190036E919 /* HueFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E45C228D40190036E919 /* HueFilter.m */; };
+		4A20E460228D46F30036E919 /* AlbumModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E45F228D46F30036E919 /* AlbumModel.m */; };
+		4A20E463228D47F20036E919 /* PhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E462228D47F20036E919 /* PhotoModel.m */; };
+		4A20E466228D48A70036E919 /* PhotosManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E465228D48A70036E919 /* PhotosManager.m */; };
+		4A20E46B228D49C30036E919 /* AlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E46A228D49C30036E919 /* AlbumView.m */; };
+		4A20E46E228D4B000036E919 /* AlbumTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E46D228D4B000036E919 /* AlbumTableView.m */; };
+		4A20E471228D4B950036E919 /* AlbumTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E470228D4B950036E919 /* AlbumTableViewCell.m */; };
+		4A20E474228D4C520036E919 /* AlbumCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E473228D4C520036E919 /* AlbumCollectionViewCell.m */; };
+		4A20E478228D4D590036E919 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E477228D4D590036E919 /* AlbumViewController.m */; };
 		4A215BF0228959D500081F61 /* SwirlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A215BEF228959D500081F61 /* SwirlFilter.m */; };
 		4A263993228ABC2F00CBE8F9 /* ContrastFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */; };
 		4A263999228AE0A100CBE8F9 /* CompressImg.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A263998228AE0A100CBE8F9 /* CompressImg.m */; };
@@ -66,6 +76,26 @@
 		4A1A96CD227D984600785C9C /* HandlerBusiness.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandlerBusiness.m; sourceTree = "<group>"; };
 		4A1A96CE227D984600785C9C /* HandlerBusiness.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandlerBusiness.h; sourceTree = "<group>"; };
 		4A1EE4C72282BA5A00786DCD /* NewLUT.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NewLUT.png; sourceTree = "<group>"; };
+		4A20E458228D36F70036E919 /* PhotoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoManager.h; sourceTree = "<group>"; };
+		4A20E459228D36F70036E919 /* PhotoManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoManager.m; sourceTree = "<group>"; };
+		4A20E45B228D40190036E919 /* HueFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HueFilter.h; sourceTree = "<group>"; };
+		4A20E45C228D40190036E919 /* HueFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HueFilter.m; sourceTree = "<group>"; };
+		4A20E45E228D46F30036E919 /* AlbumModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumModel.h; sourceTree = "<group>"; };
+		4A20E45F228D46F30036E919 /* AlbumModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumModel.m; sourceTree = "<group>"; };
+		4A20E461228D47F20036E919 /* PhotoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoModel.h; sourceTree = "<group>"; };
+		4A20E462228D47F20036E919 /* PhotoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoModel.m; sourceTree = "<group>"; };
+		4A20E464228D48A70036E919 /* PhotosManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotosManager.h; sourceTree = "<group>"; };
+		4A20E465228D48A70036E919 /* PhotosManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotosManager.m; sourceTree = "<group>"; };
+		4A20E469228D49C30036E919 /* AlbumView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumView.h; sourceTree = "<group>"; };
+		4A20E46A228D49C30036E919 /* AlbumView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumView.m; sourceTree = "<group>"; };
+		4A20E46C228D4B000036E919 /* AlbumTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumTableView.h; sourceTree = "<group>"; };
+		4A20E46D228D4B000036E919 /* AlbumTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumTableView.m; sourceTree = "<group>"; };
+		4A20E46F228D4B950036E919 /* AlbumTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumTableViewCell.h; sourceTree = "<group>"; };
+		4A20E470228D4B950036E919 /* AlbumTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumTableViewCell.m; sourceTree = "<group>"; };
+		4A20E472228D4C520036E919 /* AlbumCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumCollectionViewCell.h; sourceTree = "<group>"; };
+		4A20E473228D4C520036E919 /* AlbumCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumCollectionViewCell.m; sourceTree = "<group>"; };
+		4A20E476228D4D590036E919 /* AlbumViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumViewController.h; sourceTree = "<group>"; };
+		4A20E477228D4D590036E919 /* AlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
 		4A215BEE228959D500081F61 /* SwirlFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwirlFilter.h; sourceTree = "<group>"; };
 		4A215BEF228959D500081F61 /* SwirlFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwirlFilter.m; sourceTree = "<group>"; };
 		4A263991228ABC2F00CBE8F9 /* ContrastFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContrastFilter.h; sourceTree = "<group>"; };
@@ -163,6 +193,55 @@
 			name = Networking;
 			sourceTree = "<group>";
 		};
+		4A20E457228D36AF0036E919 /* CustomAlbum */ = {
+			isa = PBXGroup;
+			children = (
+				4A20E464228D48A70036E919 /* PhotosManager.h */,
+				4A20E465228D48A70036E919 /* PhotosManager.m */,
+				4A20E475228D4D390036E919 /* ViewController */,
+				4A20E468228D49A60036E919 /* view */,
+				4A20E458228D36F70036E919 /* PhotoManager.h */,
+				4A20E459228D36F70036E919 /* PhotoManager.m */,
+				4A20E45E228D46F30036E919 /* AlbumModel.h */,
+				4A20E45F228D46F30036E919 /* AlbumModel.m */,
+				4A20E461228D47F20036E919 /* PhotoModel.h */,
+				4A20E462228D47F20036E919 /* PhotoModel.m */,
+			);
+			name = CustomAlbum;
+			sourceTree = "<group>";
+		};
+		4A20E467228D497B0036E919 /* Album */ = {
+			isa = PBXGroup;
+			children = (
+				4A20E469228D49C30036E919 /* AlbumView.h */,
+				4A20E46A228D49C30036E919 /* AlbumView.m */,
+				4A20E46C228D4B000036E919 /* AlbumTableView.h */,
+				4A20E46D228D4B000036E919 /* AlbumTableView.m */,
+				4A20E46F228D4B950036E919 /* AlbumTableViewCell.h */,
+				4A20E470228D4B950036E919 /* AlbumTableViewCell.m */,
+				4A20E472228D4C520036E919 /* AlbumCollectionViewCell.h */,
+				4A20E473228D4C520036E919 /* AlbumCollectionViewCell.m */,
+			);
+			name = Album;
+			sourceTree = "<group>";
+		};
+		4A20E468228D49A60036E919 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				4A20E467228D497B0036E919 /* Album */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
+		4A20E475228D4D390036E919 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				4A20E476228D4D590036E919 /* AlbumViewController.h */,
+				4A20E477228D4D590036E919 /* AlbumViewController.m */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
 		4AEA12D7228C5032007EB20A /* FilerGroup */ = {
 			isa = PBXGroup;
 			children = (
@@ -218,6 +297,7 @@
 		6003F593195388D20070C39A /* Example for Mask */ = {
 			isa = PBXGroup;
 			children = (
+				4A20E457228D36AF0036E919 /* CustomAlbum */,
 				4AEA12D7228C5032007EB20A /* FilerGroup */,
 				4A1A96C8227D982F00785C9C /* Networking */,
 				6003F59C195388D20070C39A /* ZZPAppDelegate.h */,
@@ -248,6 +328,8 @@
 				6003F594195388D20070C39A /* Supporting Files */,
 				4A263997228AE0A000CBE8F9 /* CompressImg.h */,
 				4A263998228AE0A100CBE8F9 /* CompressImg.m */,
+				4A20E45B228D40190036E919 /* HueFilter.h */,
+				4A20E45C228D40190036E919 /* HueFilter.m */,
 			);
 			name = "Example for Mask";
 			path = Mask;
@@ -478,22 +560,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* ZZPAppDelegate.m in Sources */,
+				4A20E46B228D49C30036E919 /* AlbumView.m in Sources */,
 				4A263999228AE0A100CBE8F9 /* CompressImg.m in Sources */,
+				4A20E45A228D36F70036E919 /* PhotoManager.m in Sources */,
+				4A20E474228D4C520036E919 /* AlbumCollectionViewCell.m in Sources */,
 				4A5686152288183C00409941 /* LutFilter.m in Sources */,
+				4A20E463228D47F20036E919 /* PhotoModel.m in Sources */,
 				4A29C7662279E05D002980F3 /* CollectionViewController.m in Sources */,
 				4A29C76A2279E05D002980F3 /* MotionManager.m in Sources */,
 				4A215BF0228959D500081F61 /* SwirlFilter.m in Sources */,
+				4A20E46E228D4B000036E919 /* AlbumTableView.m in Sources */,
+				4A20E460228D46F30036E919 /* AlbumModel.m in Sources */,
 				4AEA12CD228BF68A007EB20A /* Lookuptablefilter.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				4A29C7572279E035002980F3 /* MainViewController.m in Sources */,
 				4AEA12D6228C5002007EB20A /* editRawViewController.m in Sources */,
 				4A29C7682279E05D002980F3 /* CollectionViewCell.m in Sources */,
+				4A20E45D228D40190036E919 /* HueFilter.m in Sources */,
 				4A1A96CF227D984600785C9C /* AHCApiClient.m in Sources */,
 				4A29C75C2279E04E002980F3 /* PhotoViewController.m in Sources */,
+				4A20E471228D4B950036E919 /* AlbumTableViewCell.m in Sources */,
 				4A263993228ABC2F00CBE8F9 /* ContrastFilter.m in Sources */,
+				4A20E466228D48A70036E919 /* PhotosManager.m in Sources */,
 				4A1A96D1227D984600785C9C /* HandlerBusiness.m in Sources */,
 				4A26399B228AE4A500CBE8F9 /* EffectShowController.m in Sources */,
 				4A1A96D0227D984600785C9C /* BaseHandlerBusiness.m in Sources */,
+				4A20E478228D4D590036E919 /* AlbumViewController.m in Sources */,
 				4AEA12D0228C1FB0007EB20A /* RGBFilter.m in Sources */,
 				4AEA12D3228C23E2007EB20A /* SaturationFilter.m in Sources */,
 			);

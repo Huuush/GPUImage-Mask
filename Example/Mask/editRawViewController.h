@@ -11,5 +11,5 @@
 @interface editRawViewController : UIViewController
 
 @property(nonatomic, strong) UIImageView *imageView;
-
+@property(nonatomic, strong) UIImage *imagefrompick;
 @end

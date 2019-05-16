@@ -13,11 +13,12 @@
 
 #import "CollectionViewController.h"
 #import "CollectionViewCell.h"
-#import "Masonry.h"
 #import "HandlerBusiness.h"
+#import "editRawViewController.h"
+//#import "PhotoPickerController.h"
+#import "PhotosManager.h"
 
-
-@interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate>
 {
     
     UICollectionView * _collectionView;
@@ -41,13 +42,9 @@
 
 - (void) inputPhoto {
     NSLog(@"点击到了");
-    //导入相册
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.delegate = self;
-    //设置选择后的图片可被编辑
-    //    picker.allowsEditing = YES;
-    [self presentViewController:picker animated:YES completion:nil];
+    [PhotosManager showPhotosManager:self withMaxImageCount:10 withAlbumArray:^(NSMutableArray<PhotoModel *> *albumArray) {
+        NSLog(@"%@", albumArray);
+    }];
 }
 
 - (void)loadData{
@@ -112,6 +109,8 @@
 }
 //pickimage
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(nullable NSDictionary<NSString *,id> *)editingInfo{
+    editRawViewController *editvc = [editRawViewController new];
+    editvc.imagefrompick = image;
     
 }
 
