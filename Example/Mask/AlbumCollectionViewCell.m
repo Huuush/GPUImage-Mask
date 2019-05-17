@@ -74,6 +74,7 @@
     if (self.selectPhotoAction) {
         self.selectPhotoAction(self.asset);
     }
+    
 }
 
 #pragma mark - Get方法

@@ -86,7 +86,6 @@
 //            break;
 //    }
     
-    
     [self saveImageToPhotoAlbum:_EffectedImg];
     
     CompressImg * compress = [CompressImg new];

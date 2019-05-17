@@ -117,7 +117,7 @@
 
 -(UIImageView *) imageView {
     if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, APP_SCREEN_WIDTH, APP_SCREEN_HEIGHT-130)];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 40, APP_SCREEN_WIDTH, APP_SCREEN_HEIGHT-130)];
     }
     return _imageView;
 }

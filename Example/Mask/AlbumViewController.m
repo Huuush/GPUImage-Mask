@@ -12,6 +12,7 @@
 #import "PhotoManager.h"
 #import "AlbumView.h"
 #import "PhotoModel.h"
+#import "editRawViewController.h"
 
 #define kScreenWidth  [[UIScreen mainScreen] bounds].size.width
 #define kScreenHeight [[UIScreen mainScreen] bounds].size.height

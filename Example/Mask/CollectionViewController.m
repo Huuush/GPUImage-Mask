@@ -15,7 +15,6 @@
 #import "CollectionViewCell.h"
 #import "HandlerBusiness.h"
 #import "editRawViewController.h"
-//#import "PhotoPickerController.h"
 #import "PhotosManager.h"
 
 @interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate>
@@ -42,9 +41,12 @@
 
 - (void) inputPhoto {
     NSLog(@"点击到了");
-    [PhotosManager showPhotosManager:self withMaxImageCount:10 withAlbumArray:^(NSMutableArray<PhotoModel *> *albumArray) {
-        NSLog(@"%@", albumArray);
-    }];
+//    [PhotosManager showPhotosManager:self withMaxImageCount:10 withAlbumArray:^(NSMutableArray<PhotoModel *> *albumArray) {
+//        NSLog(@"%@", albumArray);
+//    }];
+    
+    editRawViewController *evc = [[editRawViewController alloc] init];
+    [self.navigationController pushViewController:evc animated:YES];
 }
 
 - (void)loadData{

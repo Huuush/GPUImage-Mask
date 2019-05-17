@@ -61,6 +61,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (strong, nonatomic) UIButton *EffectButton;
 @property (strong, nonatomic) UIButton *CancelButton;
 @property (strong, nonatomic) UIButton *saveToAlbumButton;
+@property (strong, nonatomic) UIButton *rawButton;
+@property (strong, nonatomic) UIButton *ShaderButton;
+@property (strong, nonatomic) UIButton *lutButton;
+@property (strong, nonatomic) UIButton *halftoneButton;
+@property (strong, nonatomic) UIButton *temButton;
+
 @property (nonatomic, strong) UIView *EffectListView;
 //@property (nonatomic)UIImageView *imageView;
 @property (nonatomic, strong) GPUImageView *preLayerView;
@@ -73,6 +79,9 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
 @property (nonatomic, strong) RGBFilter *RGBFilter;
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
+@property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
+
+
 @property (nonatomic, strong) HueFilter *hueFilter;
 /* 获取屏幕方向 */
 @property (nonatomic, assign) UIDeviceOrientation orientation;
@@ -177,33 +186,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
         make.height.mas_equalTo(30);
     }];
     
-//    self.CancelButton = [[UIButton alloc] init];
-//    //    self.CancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.CancelButton setTitle:@"取消" forState:UIControlStateNormal];
-//    [_CancelButton addTarget:self action:@selector(cancle) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:_CancelButton];
-//    self.CancelButton.hidden = YES;
-//    [self.CancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(self.view.mas_left).mas_offset(30);
-//        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-30);
-//        make.width.mas_equalTo(50);
-//        make.height.mas_equalTo(50);
-//    }];
-    
-//    self.saveToAlbumButton = [[UIButton alloc] init];
-//    [self.saveToAlbumButton setTitle:@"保存" forState:UIControlStateNormal];
-//    [self.saveToAlbumButton addTarget:self action:@selector(saveToAblum) forControlEvents:UIControlEventTouchUpInside];
-//    self.preAlbum.layer.cornerRadius = 3;
-//    self.preAlbum.layer.masksToBounds = YES;
-//    [self.view addSubview:_saveToAlbumButton];
-//    self.saveToAlbumButton.hidden = YES;
-//    [self.saveToAlbumButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.right.mas_equalTo(self.view.mas_right).mas_offset(-30);
-//        make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-30);
-//        make.width.mas_equalTo(50);
-//        make.height.mas_equalTo(50);
-//    }];
-    
 }
 #pragma mark - 初始化相机
 - (void)customCamera{
@@ -216,7 +198,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.view addSubview:_preLayerView];
     [self.preLayerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.view.mas_right).mas_offset(0);
-        make.top.mas_equalTo(self.view.mas_top).mas_offset(0);
+        make.top.mas_equalTo(self.view.mas_top).mas_offset(40);
         make.width.mas_equalTo(APP_SCREEN_WIDTH);
         make.height.mas_equalTo(APP_SCREEN_HEIGHT-130);
     }];
@@ -224,143 +206,35 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     self.preLayerView.userInteractionEnabled = YES;
     // 初始化滤镜
     self.effectTag = 1;
-    [_captureCamera addTarget:self.rawFilter];
-    [self.rawFilter addTarget:_preLayerView];
     
+//    GPUImageColorMatrixFilter *halftone = [[GPUImageColorMatrixFilter alloc] init];//kexing  jia!!!
+////    halftone.distance = 0.1;
+////    halftone.slope = 0.2;
+//    halftone.colorMatrix = (GPUMatrix4x4){
+//        {1.f, 0.f, 0.5f, 0.f},
+//        {0.f, 1.f, 0.4f, 0.f},
+//        {0.4f, 0.f, 1.f, 0.f},
+//        {0.f, 0.f, 0.f, 1.f}
+//    };
+    [_captureCamera addTarget:self.rawFilter];
+//    [self.rawFilter addTarget:halftone];
+//    [halftone addTarget:_preLayerView];
+    [self.rawFilter addTarget:_preLayerView];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(focusGesture:)];
     [self.preLayerView addGestureRecognizer:tapGesture];
-    
-    
-    
-    //原生AVFoundation
-    //使用AVMediaTypeVideo 指明self.device代表视频，默认使用后置摄像头进行初始化
-    //self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    
-    //使用设备初始化输入
-    //self.input = [[AVCaptureDeviceInput alloc]initWithDevice:self.device error:nil];
 
-    //生成输出对象
-    //self.output = [[AVCaptureMetadataOutput alloc] init];
-    //self.ImageOutPut = [[AVCaptureStillImageOutput alloc] init];
-
-    //生成会话，用来结合输入输出
-//    self.session = [[AVCaptureSession alloc]init];
-//    if ([self.session canSetSessionPreset:AVCaptureSessionPresetPhoto]) {
-//
-//        self.session.sessionPreset = AVCaptureSessionPresetPhoto;
-//
-//    }
-//    if ([self.session canAddInput:self.input]) {
-//        [self.session addInput:self.input];
-//    }
-//
-//    if ([self.session canAddOutput:self.ImageOutPut]) {
-//        [self.session addOutput:self.ImageOutPut];
-//    }
-    
-    //[self setUpPreviewLayer];
     
     
 }
 
 #pragma mark - 闪光灯失效
 - (void)FlashOn{
-    if ([self.captureCamera inputCamera].flashMode == AVCaptureFlashModeOff)
-    {
-        NSError *error;
-        [[self.captureCamera inputCamera] lockForConfiguration:&error];
-        [self.captureCamera inputCamera].flashMode = AVCaptureFlashModeOn;
-        [[self.captureCamera inputCamera] unlockForConfiguration];
-        return ;
-    }
-    else if([self.captureCamera inputCamera].flashMode == AVCaptureFlashModeOn)
-    {
-        NSError *error;
-        [[self.captureCamera inputCamera] lockForConfiguration:&error];
-        [self.captureCamera inputCamera].flashMode = AVCaptureFlashModeAuto;
-        [[self.captureCamera inputCamera] unlockForConfiguration];
-        return ;
-    }
-    if([self.captureCamera inputCamera].flashMode == AVCaptureFlashModeAuto)
-    {
-        NSError *error;
-        [[self.captureCamera inputCamera] lockForConfiguration:&error];
-        [self.captureCamera inputCamera].flashMode = AVCaptureFlashModeOff;
-        [[self.captureCamera inputCamera] unlockForConfiguration];
-        return ;
-    }
-//    //修改前必须先锁定
-//    [self.captureCamera.inputCamera lockForConfiguration:nil];
-//
-//    //必须判定是否有闪光灯，否则如果没有闪光灯会崩溃
-//    if ([self.captureCamera.inputCamera hasFlash]) {
-//        self.captureCamera.inputCamera.flashMode = AVCaptureFlashModeOff;
-//
-//        if (self.captureCamera.inputCamera.flashMode == AVCaptureFlashModeOff) {
-//            self.captureCamera.inputCamera.flashMode = AVCaptureFlashModeOn;
-//
-//            [_flashButton setBackgroundImage:[UIImage imageNamed:@"flash_on"] forState:UIControlStateNormal];
-//        } else if (self.captureCamera.inputCamera.flashMode == AVCaptureFlashModeOn) {
-//            self.captureCamera.inputCamera.flashMode = AVCaptureFlashModeAuto;
-//            [_flashButton setBackgroundImage:[UIImage imageNamed:@"flash_auto"] forState:UIControlStateNormal];
-//        } else if (self.captureCamera.inputCamera.flashMode == AVCaptureFlashModeAuto) {
-//            self.captureCamera.inputCamera.flashMode = AVCaptureFlashModeOff;
-//            [_flashButton setBackgroundImage:[UIImage imageNamed:@"flash_off"] forState:UIControlStateNormal];
-//        }
-//
-//    } else {
-//
-//        NSLog(@"设备不支持闪光灯");
-//    }
-//    [self.captureCamera.inputCamera unlockForConfiguration];
+
 }
 
 
 - (void)changeCamera{
-//    NSUInteger cameraCount = [[AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo] count];
-//    if (cameraCount > 1) {
-//        NSError *error;
-//
-//        CATransition *animation = [CATransition animation];
-//
-//        animation.duration = .5f;
-//
-//        animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//
-//        animation.type = @"oglFlip";
-//        AVCaptureDevice *newCamera = nil;
-//        AVCaptureDeviceInput *newInput = nil;
-//        AVCaptureDevicePosition position = [[_input device] position];
-//        if (position == AVCaptureDevicePositionFront){
-//            newCamera = [self cameraWithPosition:AVCaptureDevicePositionBack];
-//            animation.subtype = kCATransitionFromLeft;
-//        }
-//        else {
-//            newCamera = [self cameraWithPosition:AVCaptureDevicePositionFront];
-//            animation.subtype = kCATransitionFromRight;
-//        }
-//
-//        newInput = [AVCaptureDeviceInput deviceInputWithDevice:newCamera error:nil];
-//        [self.previewLayer addAnimation:animation forKey:nil];
-//        if (newInput != nil) {
-//            [self.session beginConfiguration];
-//            [self.session removeInput:_input];
-//            if ([self.session canAddInput:newInput]) {
-//                [self.session addInput:newInput];
-//                self.input = newInput;
-//
-//            } else {
-//                [self.session addInput:self.input];
-//            }
-//
-//            [self.session commitConfiguration];
-//
-//        } else if (error) {
-//            NSLog(@"toggle carema failed, error = %@", error);
-//        }
-//
-//    }
 
     [self.captureCamera rotateCamera];
 
@@ -463,7 +337,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     }
     else if(self.effectTag == 3)
     {
-
         [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.LutFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
@@ -481,7 +354,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     else if(self.effectTag == 4)
     {
 
-        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.hueFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.HalftoneFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
             //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
             //                [self.motionManager startMotionManager:^(NSInteger orientation) {
             //                self.orientation = orientation;
@@ -499,104 +372,44 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     
 }
 
-#pragma mark - AVFoundation原生截取照片
-- (void) shutterCamera
-{
-    AVCaptureConnection * videoConnection = [self.ImageOutPut connectionWithMediaType:AVMediaTypeVideo];
-    if (!videoConnection) {
-        NSLog(@"take photo failed!");
-        return;
-    }
-    
-    //block 回调函数
-    //__weak __typeof(self)weakSelf = self;
-    [self.ImageOutPut captureStillImageAsynchronouslyFromConnection:videoConnection completionHandler:^(CMSampleBufferRef imageDataSampleBuffer, NSError *error) {
-        if (imageDataSampleBuffer == NULL) {
-            return;
-        }
-
-        [self.captureCamera stopCameraCapture];
-        
-        NSData * imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
-        _image = [UIImage imageWithData:imageData];
-        
-        //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
-        [self.motionManager startMotionManager:^(NSInteger orientation) {
-            self.orientation = orientation;
-            NSLog(@"设备方向：%ld",orientation);
-        }];
-        //开始图像处理
-//        GPUImagePicture *sourcePicture = [[GPUImagePicture alloc] initWithImage:_image];
-//
-////        //渲染图片
-//        [self.customFilter forceProcessingAtSizeRespectingAspectRatio:_image.size];
-//        [self.customFilter useNextFrameForImageCapture];
-////        // 把滤镜串联在图片输入组件之后
-//        [sourcePicture addTarget:self.customFilter];
-//        [sourcePicture processImage];
-////
-////        //图像处理结束
-//        UIImage *newImage = [self.customFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationRight];
-//        _image = newImage;
-        
-        
-        //预览层显示图片
-//        self.imageView = [[UIImageView alloc] initWithFrame:self.previewLayer.frame];
-//        self.imageView.image = newImage;
-//        [self.view insertSubview:_imageView belowSubview:_PhotoButton];
-        
-//        self.imageView.layer.masksToBounds = YES;
-//        self.imageView.image = image;
-//        NSLog(@"image size = %@",NSStringFromCGSize(self.image.size));
-    }];
-    
-}
-
 #pragma mark - 滤镜listview
 - (void) OpenEffectlist {
     [self.preLayerView addSubview:self.EffectListView];
-    UIButton *rawBotton = [[UIButton alloc] init];
-    [rawBotton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
-    [self.EffectListView addSubview:rawBotton];
-    [rawBotton addTarget:self action:@selector(openRaw) forControlEvents:UIControlEventTouchUpInside];
-    [rawBotton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.EffectListView.mas_left).mas_offset(100);
-        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(10);
-        make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
-    }];
     
-    UIButton *shaderBotton = [[UIButton alloc] init];
-    [shaderBotton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
-    [self.EffectListView addSubview:shaderBotton];
-    [shaderBotton addTarget:self action:@selector(openShader) forControlEvents:UIControlEventTouchUpInside];
-    [shaderBotton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(rawBotton.mas_right).mas_offset(10);
-        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(10);
+    [self.EffectListView addSubview:self.rawButton];
+    [self.rawButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.EffectListView.mas_left).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
         make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
+        make.height.mas_equalTo(30);
     }];
-    
-    UIButton *lutBotton = [[UIButton alloc] init];
-    [lutBotton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
-    [self.EffectListView addSubview:lutBotton];
-    [lutBotton addTarget:self action:@selector(openLut) forControlEvents:UIControlEventTouchUpInside];
-    [lutBotton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(shaderBotton.mas_right).mas_offset(10);
-        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(10);
+    [self.EffectListView addSubview:self.ShaderButton];
+    [self.ShaderButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.rawButton.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
         make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
+        make.height.mas_equalTo(30);
     }];
-    
-    UIButton *outRedBotton = [[UIButton alloc] init];
-    [outRedBotton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
-    [self.EffectListView addSubview:outRedBotton];
-    [outRedBotton addTarget:self action:@selector(openOutRed) forControlEvents:UIControlEventTouchUpInside];
-    [outRedBotton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(lutBotton.mas_right).mas_offset(10);
-        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(10);
+    [self.EffectListView addSubview:self.lutButton];
+    [self.lutButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.ShaderButton.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
+        make.width.mas_equalTo(70);
+        make.height.mas_equalTo(30);
+    }];
+    [self.EffectListView addSubview:self.halftoneButton];
+    [self.halftoneButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.lutButton.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
         make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
+        make.height.mas_equalTo(30);
+    }];
+    [self.EffectListView addSubview:self.temButton];
+    [self.temButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.halftoneButton.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
+        make.width.mas_equalTo(50);
+        make.height.mas_equalTo(30);
     }];
     
     if (_EffectListView.hidden == NO) {
@@ -642,6 +455,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 }
 
 #pragma mark - lazyload 滤镜
+
 - (LutFilter *)LutFilter {
     if (!_LutFilter) {
         _LutFilter = [[LutFilter alloc] init];
@@ -656,13 +470,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _rawFilter;
 }
 
-- (RGBFilter * ) RGBFilter{
-    if (!_RGBFilter) {
-        _RGBFilter = [[RGBFilter alloc] init];
-    }
-    return _RGBFilter;
-}
-
 -(SaturationFilter *) SaturationFilter{
     if (!_SaturationFilter) {
         _SaturationFilter = [[SaturationFilter alloc] init];
@@ -670,11 +477,17 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _SaturationFilter;
 }
 
+-(GPUImageHalftoneFilter *) HalftoneFilter{
+    if (!_HalftoneFilter) {
+        _HalftoneFilter = [GPUImageHalftoneFilter new];
+    }
+    return _HalftoneFilter;
+}
+
 - (UIView *) EffectListView {
     if(!_EffectListView){
-        _EffectListView = [[UIView alloc] initWithFrame:CGRectMake(0, 50, APP_SCREEN_WIDTH, 80)];
-        _EffectListView.backgroundColor = [UIColor colorWithWhite:0.f alpha:0.5];
-        
+        _EffectListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, APP_SCREEN_WIDTH, 30)];
+        _EffectListView.backgroundColor = [UIColor blackColor];
     }
     return _EffectListView;
 }
@@ -686,163 +499,60 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _feedBack;
 }
 
-//重置图片方向
-//- (void)resetImageWithOrientation:(UIImageOrientation)imageOrientation {
-//
-//    //横屏拍摄的时候，旋转图片
-//    UIImage *image = [UIImage imageWithCGImage:_image.CGImage scale:1.0 orientation:imageOrientation];
-//    _imageView.image = image;
-//
-//    //将横屏拍摄的图片旋转至竖屏，并调整imageview的尺寸
-//    CGFloat width = self.view.frame.size.width;
-//
-//    CGFloat height = image.size.height * width / image.size.width;
-//    CGRect frame = _imageView.frame;
-//    frame.size.height = height;
-//    _imageView.frame = frame;
-//    _imageView.center = self.view.center;
-//
-//}
+- (UIButton *) rawButton{
+    if (!_rawButton) {
+        _rawButton = [UIButton new];
+        [_rawButton setTitle:@"无滤镜" forState:UIControlStateNormal];
+        _rawButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_rawButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [_rawButton addTarget:self action:@selector(openRaw) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _rawButton;
+}
 
-//修正图片方向
-//- (UIImage *)image:(UIImage *)image rotation:(UIImageOrientation)orientation
-//{
-//    long double rotate = 0.0;
-//    CGRect rect;
-//    float translateX = 0;
-//    float translateY = 0;
-//    float scaleX = 1.0;
-//    float scaleY = 1.0;
-//
-//    switch (orientation) {
-//        case UIImageOrientationLeft:
-//            rotate = M_PI_2;
-//            rect = CGRectMake(0, 0, image.size.height, image.size.width);
-//            translateX = 0;
-//            translateY = -rect.size.width;
-//            scaleY = rect.size.width/rect.size.height;
-//            scaleX = rect.size.height/rect.size.width;
-//            break;
-//        case UIImageOrientationRight:
-//            rotate = 33 * M_PI_2;
-//            rect = CGRectMake(0, 0, image.size.height, image.size.width);
-//            translateX = -rect.size.height;
-//            translateY = 0;
-//            scaleY = rect.size.width/rect.size.height;
-//            scaleX = rect.size.height/rect.size.width;
-//            break;
-//        case UIImageOrientationDown:
-//            rotate = M_PI;
-//            rect = CGRectMake(0, 0, image.size.width, image.size.height);
-//            translateX = -rect.size.width;
-//            translateY = -rect.size.height;
-//            break;
-//        default:
-//            rotate = 0.0;
-//            rect = CGRectMake(0, 0, image.size.width, image.size.height);
-//            translateX = 0;
-//            translateY = 0;
-//            break;
-//    }
-//
-//    UIGraphicsBeginImageContext(rect.size);
-//    CGContextRef context = UIGraphicsGetCurrentContext();
-//    //做CTM变换
-//    CGContextTranslateCTM(context, 0.0, rect.size.height);
-//    CGContextScaleCTM(context, 1.0, -1.0);
-//    CGContextRotateCTM(context, rotate);
-//    CGContextTranslateCTM(context, translateX, translateY);
-//
-//    CGContextScaleCTM(context, scaleX, scaleY);
-//    //绘制图片
-//    CGContextDrawImage(context, CGRectMake(0, 0, rect.size.width, rect.size.height), image.CGImage);
-//
-//    UIImage *newPic = UIGraphicsGetImageFromCurrentImageContext();
-//
-//    return newPic;
-//}
+- (UIButton *) ShaderButton{
+    if (!_ShaderButton) {
+        _ShaderButton = [UIButton new];
+        [_ShaderButton setTitle:@"黑白" forState:UIControlStateNormal];
+        _ShaderButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_ShaderButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [_ShaderButton addTarget:self action:@selector(openShader) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _ShaderButton;
+}
 
-//- (UIImage *)fixOrientation:(UIImage *)aImage {
-//
-//    // No-op if the orientation is already correct
-//    if (aImage.imageOrientation == UIImageOrientationUp)
-//        return aImage;
-//
-//    // We need to calculate the proper transformation to make the image upright.
-//    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
-//    CGAffineTransform transform = CGAffineTransformIdentity;
-//
-//    switch (aImage.imageOrientation) {
-//        case UIImageOrientationDown:
-//        case UIImageOrientationDownMirrored:
-//            transform = CGAffineTransformTranslate(transform, aImage.size.width, aImage.size.height);
-//            transform = CGAffineTransformRotate(transform, M_PI);
-//            break;
-//
-//        case UIImageOrientationLeft:
-//        case UIImageOrientationLeftMirrored:
-//            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
-//            transform = CGAffineTransformRotate(transform, M_PI_2);
-//            break;
-//
-//        case UIImageOrientationRight:
-//            transform = CGAffineTransformTranslate(transform, 0, aImage.size.height);
-//            transform = CGAffineTransformRotate(transform, M_PI_2);
-//            break;
-//        case UIImageOrientationRightMirrored:
-//            transform = CGAffineTransformTranslate(transform, 0, aImage.size.height);
-//            transform = CGAffineTransformRotate(transform, -M_PI_2);
-//            break;
-//        default:
-//            break;
-//    }
-//
-//    switch (aImage.imageOrientation) {
-//        case UIImageOrientationUpMirrored:
-//        case UIImageOrientationDownMirrored:
-//            transform = CGAffineTransformTranslate(transform, aImage.size.width, 0);
-//            transform = CGAffineTransformScale(transform, -1, 1);
-//            break;
-//
-//        case UIImageOrientationLeftMirrored:
-//        case UIImageOrientationRightMirrored:
-//            transform = CGAffineTransformTranslate(transform, aImage.size.height, 0);
-//            transform = CGAffineTransformScale(transform, -1, 1);
-//            break;
-//        default:
-//            break;
-//    }
-//    // Now we draw the underlying CGImage into a new context, applying the transform
-//    // calculated above.
-//    CGContextRef ctx = CGBitmapContextCreate(NULL, aImage.size.width, aImage.size.height,
-//                                             CGImageGetBitsPerComponent(aImage.CGImage), 0,
-//                                             CGImageGetColorSpace(aImage.CGImage),
-//                                             CGImageGetBitmapInfo(aImage.CGImage));
-//    CGContextConcatCTM(ctx, transform);
-//    switch (aImage.imageOrientation) {
-//        case UIImageOrientationLeft:
-//        case UIImageOrientationLeftMirrored:
-//        case UIImageOrientationRight:
-//            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.height,aImage.size.width), aImage.CGImage);
-//            break;
-//        case UIImageOrientationRightMirrored:
-//            // Grr...
-//            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.height,aImage.size.width), aImage.CGImage);
-//            break;
-//
-//        default:
-//            CGContextDrawImage(ctx, CGRectMake(0,0,aImage.size.width,aImage.size.height), aImage.CGImage);
-//            break;
-//    }
-//
-//    // And now we just create a new UIImage from the drawing context
-//    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
-//    UIImage *img = [UIImage imageWithCGImage:cgimg];
-//    CGContextRelease(ctx);
-//    CGImageRelease(cgimg);
-//    return img;
-//}
+- (UIButton *) lutButton{
+    if (!_lutButton) {
+        _lutButton = [UIButton new];
+        [_lutButton setTitle:@"富士·胶片" forState:UIControlStateNormal];
+        _lutButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_lutButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [_lutButton addTarget:self action:@selector(openLutFilter) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _lutButton;
+}
 
+- (UIButton *) halftoneButton{
+    if (!_halftoneButton) {
+        _halftoneButton = [UIButton new];
+        [_halftoneButton setTitle:@"半色调" forState:UIControlStateNormal];
+        _halftoneButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_halftoneButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [_halftoneButton addTarget:self action:@selector(openhalftone) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _halftoneButton;
+}
+
+- (UIButton *) temButton{
+    if (!_temButton) {
+        _temButton = [UIButton new];
+        [_temButton setTitle:@"色温" forState:UIControlStateNormal];
+        _temButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_temButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [_temButton addTarget:self action:@selector(opentem) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _temButton;
+}
 - (MotionManager *)motionManager {
     if(!_motionManager) {
         _motionManager = [[MotionManager alloc] init];
@@ -853,6 +563,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #pragma mark - 选择滤镜
 - (void) openRaw {
     self.effectTag = 1;
+    self.rawButton.selected = !self.rawButton.selected;
+    self.ShaderButton.selected = NO;
+    self.lutButton.selected = NO;
+    self.halftoneButton.selected = NO;
+    self.temButton.selected = NO;
+    
+    [self.rawButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     [_captureCamera addTarget:self.rawFilter];
@@ -861,6 +578,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openShader {
     self.effectTag = 2;
+    self.ShaderButton.selected = !self.ShaderButton.selected;
+    self.rawButton.selected = NO;
+    self.lutButton.selected = NO;
+    self.halftoneButton.selected = NO;
+    self.temButton.selected = NO;
+    
+    [self.ShaderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     GPUImageGrayscaleFilter * grayfliter = [[GPUImageGrayscaleFilter alloc] init];
@@ -868,25 +592,60 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_captureCamera addTarget:grayfliter];
     [grayfliter addTarget:_ContrastFilter];
     [_ContrastFilter addTarget:_preLayerView];
-    
 }
 
-- (void) openLut{
+- (void) openLutFilter{
     self.effectTag = 3;
+    self.lutButton.selected = !self.lutButton.selected;
+    self.rawButton.selected = NO;
+    self.ShaderButton.selected = NO;
+    self.halftoneButton.selected = NO;
+    self.temButton.selected = NO;
+    
+    [self.lutButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     [self.captureCamera addTarget:self.LutFilter];
     [self.LutFilter addTarget:_preLayerView];
 }
 
-- (void) openOutRed{
+- (void) openhalftone{
     self.effectTag = 4;
+    self.halftoneButton.selected = !self.halftoneButton.selected;
+    self.rawButton.selected = NO;
+    self.ShaderButton.selected = NO;
+    self.lutButton.selected = NO;
+    self.temButton.selected = NO;
+    
+    [self.halftoneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
-    _hueFilter = [HueFilter new];
-    [self.captureCamera addTarget:_hueFilter];
-//    [HueFilter addTarget:self.SaturationFilter];
-    [_hueFilter addTarget:_preLayerView];
+//    self.HalftoneFilter = [GPUImageHalftoneFilter new];
+    [self.captureCamera addTarget:self.HalftoneFilter];
+//    [self.HalftoneFilter addTarget:self.ContrastFilter];
+//    self.ContrastFilter.contrast = 1.5;
+    [self.HalftoneFilter addTarget:_preLayerView];
+}
+
+- (void) opentem{
+    self.effectTag = 5;
+    self.temButton.selected = !self.temButton.selected;
+    self.rawButton.selected = NO;
+    self.ShaderButton.selected = NO;
+    self.lutButton.selected = NO;
+    self.halftoneButton.selected = NO;
+    
+    [self.temButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [_feedBack impactOccurred];
+    [self.captureCamera removeAllTargets];
+    GPUImageWhiteBalanceFilter *WhiteBalanceFilter = [GPUImageWhiteBalanceFilter new];
+    GPUImageContrastFilter * contrastFilter = [GPUImageContrastFilter new];
+    contrastFilter.contrast = 0.7;
+    WhiteBalanceFilter.temperature = 4000;
+//    self.ContrastFilter.contrast = 0.7;
+    [self.captureCamera addTarget:WhiteBalanceFilter];
+    [WhiteBalanceFilter addTarget:contrastFilter];
+    [contrastFilter addTarget:_preLayerView];
 }
 
 - (void)WhiteBallence{

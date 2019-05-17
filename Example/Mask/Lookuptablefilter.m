@@ -12,7 +12,7 @@
 NSString *const kGPUImageLookupFragmentShaderString = SHADER_STRING
 (
  varying highp vec2 textureCoordinate;
- varying highp vec2 textureCoordinate2; // TODO: This is not used
+// varying highp vec2 textureCoordinate2; // TODO: This is not used
  
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2; // lookup texture
@@ -52,7 +52,7 @@ NSString *const kGPUImageLookupFragmentShaderString = SHADER_STRING
 NSString *const kGPUImageLookupFragmentShaderString = SHADER_STRING
 (
  varying vec2 textureCoordinate;
- varying vec2 textureCoordinate2; // TODO: This is not used
+// varying vec2 textureCoordinate2; // TODO: This is not used
  
  uniform sampler2D inputImageTexture;
  uniform sampler2D inputImageTexture2; // lookup texture

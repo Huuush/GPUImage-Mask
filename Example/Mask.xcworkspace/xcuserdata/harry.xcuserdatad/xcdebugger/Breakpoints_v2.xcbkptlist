@@ -416,7 +416,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mask/CollectionViewController.m"
-            timestampString = "579706546.302369"
+            timestampString = "579709714.456138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "114"
@@ -431,13 +431,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Mask/EffectShowController.m"
-            timestampString = "579706546.302743"
+            filePath = "Mask/AlbumView.m"
+            timestampString = "579710075.8424571"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "-saveToAblum"
+            startingLineNumber = "82"
+            endingLineNumber = "82"
+            landmarkName = "-endAnimate"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -447,13 +447,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Mask/AlbumTableView.m"
-            timestampString = "579706546.302796"
+            filePath = "Mask/PhotoModel.m"
+            timestampString = "579721511.304564"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "-setAsset:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -463,13 +463,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Mask/AlbumTableView.m"
-            timestampString = "579706546.30284"
+            filePath = "Mask/PhotoModel.m"
+            timestampString = "579721511.304617"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "-setAsset:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -479,30 +479,14 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Mask/AlbumTableView.m"
-            timestampString = "579706546.302882"
+            filePath = "Mask/PhotoModel.h"
+            timestampString = "579792378.902824"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mask/AlbumTableView.m"
-            timestampString = "579706546.302922"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "-tableView:numberOfRowsInSection:"
-            landmarkType = "7">
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "getPictureAction"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

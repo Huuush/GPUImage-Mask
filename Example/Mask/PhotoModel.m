@@ -31,4 +31,7 @@
     });
 }
 
+-(void)getPictureAction{
+    
+}
 @end
