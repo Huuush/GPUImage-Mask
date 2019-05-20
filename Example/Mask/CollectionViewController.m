@@ -16,14 +16,25 @@
 #import "HandlerBusiness.h"
 #import "editRawViewController.h"
 #import "PhotosManager.h"
+#import "GPUImage.h"
+#import "LutFilter.h"
+#import "ContrastFilter.h"
+#import "SaturationFilter.h"
+#import "CompressImg.h"
 
-@interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate>
+@interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
-    
     UICollectionView * _collectionView;
 }
 @property (nonatomic, strong) NSData *imgData;
 @property (nonatomic, strong) NSMutableArray *imgdataArr;
+@property(nonatomic, strong) NSString *dataStr;
+@property (nonatomic, strong) GPUImageCropFilter *rawFilter;
+@property (nonatomic, strong) LutFilter *LutFilter;
+@property (nonatomic, strong) ContrastFilter *ContrastFilter;
+//@property (nonatomic, strong) RGBFilter *RGBFilter;
+@property (nonatomic, strong) SaturationFilter *SaturationFilter;
+@property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
 @end
 
 @implementation CollectionViewController
@@ -45,8 +56,10 @@
 //        NSLog(@"%@", albumArray);
 //    }];
     
-    editRawViewController *evc = [[editRawViewController alloc] init];
-    [self.navigationController pushViewController:evc animated:YES];
+    UIImagePickerController * pickvc = [UIImagePickerController new];
+    pickvc.delegate = self;
+    pickvc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    [self presentViewController:pickvc animated:YES completion:nil];
 }
 
 - (void)loadData{
@@ -70,15 +83,8 @@
 - (void) loadUI {
     UICollectionViewFlowLayout * layout = [[UICollectionViewFlowLayout alloc]init];
     layout.scrollDirection = UICollectionViewScrollDirectionVertical;
-
     _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, APP_SCREEN_WIDTH,APP_SCREEN_HEIGHT) collectionViewLayout:layout];
     _collectionView.backgroundColor = [UIColor whiteColor];
-    //到时候设置相册背景图片
-    //    NSString *path = [[NSBundlemainBundle]pathForResource:@"image"ofType:@"jpg"];
-    //    UIImage *image = [UIImageimageWithContentsOfFile:path];
-    //    self.view.layer.contents = (id)image.CGImage;
-    //_collectionView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@""]];
-    
     layout.headerReferenceSize = CGSizeMake(APP_SCREEN_WIDTH, 80);
     
     _collectionView.delegate = self;
@@ -87,7 +93,7 @@
     [self.view addSubview:_collectionView];
     
     self.backToCameraButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.backToCameraButton setBackgroundImage:[UIImage imageNamed:@"Rec Button"] forState:UIControlStateNormal];
+    [self.backToCameraButton setBackgroundImage:[UIImage imageNamed:@"Photo icon"] forState:UIControlStateNormal];
     [self.backToCameraButton addTarget:self action:@selector(backToCamera) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.backToCameraButton];
     [self.backToCameraButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -99,21 +105,180 @@
     
     
     self.inputPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.inputPhotoButton setBackgroundImage:[UIImage imageNamed:@"Latest Image Icon"] forState:UIControlStateNormal];
+    [self.inputPhotoButton setBackgroundImage:[UIImage imageNamed:@"album icon"] forState:UIControlStateNormal];
     [self.view addSubview:self.inputPhotoButton];
     [self.inputPhotoButton addTarget:self action:@selector(inputPhoto) forControlEvents:UIControlEventTouchUpInside];
     [self.inputPhotoButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).mas_offset(67);
-        make.top.mas_equalTo(self.view).mas_offset(20);
+        make.left.mas_equalTo(self.view).mas_offset(80);
+        make.top.mas_equalTo(self.view).mas_offset(30);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(30);
     }];
 }
 //pickimage
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(nullable NSDictionary<NSString *,id> *)editingInfo{
-    editRawViewController *editvc = [editRawViewController new];
-    editvc.imagefrompick = image;
-    
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(nullable NSDictionary<NSString *,id> *)editingInfo {
+    NSLog(@"aaa");
+    GPUImagePicture *sourcePicture = [[GPUImagePicture alloc] initWithImage:image];
+    if (_effectTag == 1) {
+        [self.rawFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [self.rawFilter useNextFrameForImageCapture];
+        [sourcePicture addTarget:self.rawFilter];
+        [sourcePicture processImage];
+        UIImage *newImage = [self.rawFilter imageFromCurrentFramebuffer];
+        //开始上传
+        CompressImg * compress = [CompressImg new];
+        UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
+        self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
+        
+        NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+        self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+        AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+        session.requestSerializer = [AFJSONRequestSerializer serializer];
+        NSMutableDictionary * dic = [@{
+                                       @"userId":@"1",
+                                       @"imgData":self.dataStr,
+                                       @"effectTag":@(self.effectTag),
+                                       } mutableCopy];
+        [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"上传成功！");
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"上传成功！");
+        }];
+    }
+    else if (_effectTag == 2) {
+        GPUImageFilterGroup *filterGroup = [[GPUImageFilterGroup alloc] init];
+        GPUImageGrayscaleFilter * grayfliter = [[GPUImageGrayscaleFilter alloc] init];
+        [filterGroup addFilter:grayfliter];
+        [filterGroup addFilter:self.ContrastFilter];
+        
+        [grayfliter addTarget:self.ContrastFilter];
+        filterGroup.initialFilters = [NSArray arrayWithObject:grayfliter];
+        filterGroup.terminalFilter = self.ContrastFilter;
+        
+        
+        [filterGroup forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [filterGroup useNextFrameForImageCapture];
+        [sourcePicture addTarget:filterGroup];
+        [sourcePicture processImage];
+        
+        UIImage *newImage = [filterGroup imageFromCurrentFramebuffer];
+        //开始上传
+        CompressImg * compress = [CompressImg new];
+        UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
+        self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
+        
+        NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+        self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+        AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+        session.requestSerializer = [AFJSONRequestSerializer serializer];
+        NSMutableDictionary * dic = [@{
+                                       @"userId":@"1",
+                                       @"imgData":self.dataStr,
+                                       @"effectTag":@(self.effectTag),
+                                       } mutableCopy];
+        [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"上传成功！");
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"上传成功！");
+        }];
+    }
+    else if (_effectTag == 3){
+        [self.LutFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [self.LutFilter useNextFrameForImageCapture];
+        [sourcePicture addTarget:self.LutFilter];
+        [sourcePicture processImage];
+        UIImage *newImage = [self.LutFilter imageFromCurrentFramebuffer];
+        //开始上传
+        CompressImg * compress = [CompressImg new];
+        UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
+        self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
+        
+        NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+        self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+        AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+        session.requestSerializer = [AFJSONRequestSerializer serializer];
+        NSMutableDictionary * dic = [@{
+                                       @"userId":@"1",
+                                       @"imgData":self.dataStr,
+                                       @"effectTag":@(self.effectTag),
+                                       } mutableCopy];
+        [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"上传成功！");
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"上传成功！");
+        }];
+    }
+    else if(_effectTag == 4){
+        [self.HalftoneFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [self.HalftoneFilter useNextFrameForImageCapture];
+
+        [self.HalftoneFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [self.HalftoneFilter useNextFrameForImageCapture];
+        [sourcePicture addTarget:self.HalftoneFilter];
+        [sourcePicture processImage];
+        
+        UIImage *newImage = [self.HalftoneFilter imageFromCurrentFramebuffer];
+        //开始上传
+        CompressImg * compress = [CompressImg new];
+        UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
+        self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
+        
+        NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+        self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+        AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+        session.requestSerializer = [AFJSONRequestSerializer serializer];
+        NSMutableDictionary * dic = [@{
+                                       @"userId":@"1",
+                                       @"imgData":self.dataStr,
+                                       @"effectTag":@(self.effectTag),
+                                       } mutableCopy];
+        [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"上传成功！");
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"上传成功！");
+        }];
+    }
+    else if (_effectTag == 5){
+        GPUImageFilterGroup *filterGroup = [[GPUImageFilterGroup alloc] init];
+        GPUImageWhiteBalanceFilter * BalanceFilter = [[GPUImageWhiteBalanceFilter alloc] init];
+        BalanceFilter.temperature = 4000;
+        self.ContrastFilter.contrast = 0.7;
+        [filterGroup addFilter:BalanceFilter];
+        [filterGroup addFilter:self.ContrastFilter];
+        
+        [BalanceFilter addTarget:self.ContrastFilter];
+        filterGroup.initialFilters = [NSArray arrayWithObject:BalanceFilter];
+        filterGroup.terminalFilter = self.ContrastFilter;
+        
+        [filterGroup forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [filterGroup useNextFrameForImageCapture];
+        [sourcePicture addTarget:filterGroup];
+        [sourcePicture processImage];
+        
+        UIImage *newImage = [filterGroup imageFromCurrentFramebuffer];
+        //开始上传
+        CompressImg * compress = [CompressImg new];
+        UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
+        self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
+        
+        NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+        self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+        AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+        session.requestSerializer = [AFJSONRequestSerializer serializer];
+        NSMutableDictionary * dic = [@{
+                                       @"userId":@"1",
+                                       @"imgData":self.dataStr,
+                                       @"effectTag":@(self.effectTag),
+                                       } mutableCopy];
+        [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"上传成功！");
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"上传成功！");
+        }];
+    }
+
+    [self loadData];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -164,6 +329,43 @@
 {
     return YES;
 }
+
+- (LutFilter *)LutFilter {
+    if (!_LutFilter) {
+        _LutFilter = [[LutFilter alloc] init];
+    }
+    return _LutFilter;
+}
+
+-(GPUImageCropFilter *) rawFilter{
+    if (!_rawFilter) {
+        _rawFilter = [[GPUImageCropFilter alloc] init];
+    }
+    return _rawFilter;
+}
+
+-(SaturationFilter *) SaturationFilter{
+    if (!_SaturationFilter) {
+        _SaturationFilter = [[SaturationFilter alloc] init];
+    }
+    return _SaturationFilter;
+}
+
+-(GPUImageHalftoneFilter *) HalftoneFilter{
+    if (!_HalftoneFilter) {
+        _HalftoneFilter = [GPUImageHalftoneFilter new];
+    }
+    return _HalftoneFilter;
+}
+
+- (ContrastFilter *) ContrastFilter{
+    if (!_ContrastFilter) {
+        _ContrastFilter = [[ContrastFilter alloc] init];
+    }
+    return _ContrastFilter;
+}
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

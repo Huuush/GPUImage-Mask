@@ -92,7 +92,7 @@
     //    [self.feedBack prepare];
     [_okButton addTarget:self action:@selector(completeedit) forControlEvents:UIControlEventTouchUpInside];
     [self.okButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.lutButton.mas_right).mas_offset(90);
+        make.right.mas_equalTo(self.view.mas_right).mas_offset(-50);
         make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-20);
         make.width.mas_equalTo(70);
         make.height.mas_equalTo(70);
@@ -117,7 +117,7 @@
 
 -(UIImageView *) imageView {
     if (!_imageView) {
-        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 40, APP_SCREEN_WIDTH, APP_SCREEN_HEIGHT-130)];
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 40, APP_SCREEN_WIDTH, APP_SCREEN_HEIGHT-150)];
     }
     return _imageView;
 }

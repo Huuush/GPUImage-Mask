@@ -86,6 +86,8 @@
 //            break;
 //    }
     
+    [self.feedback impactOccurred];
+
     [self saveImageToPhotoAlbum:_EffectedImg];
     
     CompressImg * compress = [CompressImg new];
@@ -105,9 +107,17 @@
     [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"上传成功！");
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"上传失败！");
-        [self.feedback impactOccurred];
-        [self.navigationController popViewControllerAnimated:YES];
+        NSLog(@"上传成功！");
+        
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"保存成功" message:nil
+           preferredStyle:UIAlertControllerStyleAlert];
+        
+        NSDictionary  * dic = @{
+                                @"alert":alert,
+                                };
+        [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timerAction:) userInfo:dic repeats:NO];
+        
+        [self.navigationController presentViewController:alert animated:YES completion:nil];
     }];
 
 #pragma mark - 预览相册区域加载最新照片
@@ -137,7 +147,15 @@
     return newImg;
 }
 
-
+- (void)timerAction:(NSTimer *)timer
+{
+    NSDictionary * dic = [timer userInfo];
+    UIAlertController *alert = [dic valueForKey:@"alert"];
+    [alert dismissViewControllerAnimated:YES completion:^{
+        [self.navigationController  popToRootViewControllerAnimated:YES];
+    }];
+    
+}
 
 #pragma - 保存至相册
 - (void)saveImageToPhotoAlbum:(UIImage*)savedImage
@@ -151,18 +169,18 @@
 - (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
 
 {
-    NSString *msg = nil ;
-    if(error != NULL){
-        msg = @"保存图片失败" ;
-    }else{
-        msg = @"保存图片成功" ;
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"保存图片结果提示"
-                                                    message:msg
-                                                   delegate:self
-                                          cancelButtonTitle:@"确定"
-                                          otherButtonTitles:nil];
-    [alert show];
+//    NSString *msg = nil ;
+//    if(error != NULL){
+//        msg = @"保存图片失败" ;
+//    }else{
+//        msg = @"保存图片成功" ;
+//    }
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"保存图片结果提示"
+//                                                    message:msg
+//                                                   delegate:self
+//                                          cancelButtonTitle:@"确定"
+//                                          otherButtonTitles:nil];
+//    [alert show];
 }
 
 - (GPUImageUIElement *) watermask {

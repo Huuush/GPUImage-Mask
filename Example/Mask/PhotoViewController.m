@@ -35,7 +35,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #import "RGBFilter.h"
 #import "SaturationFilter.h"
 
-#import "HueFilter.h"
 
 @interface PhotoViewController ()<AVCaptureMetadataOutputObjectsDelegate,UIAlertViewDelegate,AVCapturePhotoCaptureDelegate>
 
@@ -68,7 +67,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (strong, nonatomic) UIButton *temButton;
 
 @property (nonatomic, strong) UIView *EffectListView;
-//@property (nonatomic)UIImageView *imageView;
 @property (nonatomic, strong) GPUImageView *preLayerView;
 @property (nonatomic)UIView *focusView; //对焦
 @property (nonatomic)BOOL isflashOn;
@@ -81,8 +79,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
 @property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
 
-
-@property (nonatomic, strong) HueFilter *hueFilter;
 /* 获取屏幕方向 */
 @property (nonatomic, assign) UIDeviceOrientation orientation;
 /* 陀螺仪管理 */
@@ -138,15 +134,14 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     _focusView.hidden = YES;
     
     self.ChangeCamera =[[UIButton alloc] init];
-//    self.ChangeCamera = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.ChangeCamera setBackgroundImage:[UIImage imageNamed:@"Change Camera Icon"] forState:UIControlStateNormal];
+    [self.ChangeCamera setBackgroundImage:[UIImage imageNamed:@"change camera"] forState:UIControlStateNormal];
     [_ChangeCamera addTarget:self action:@selector(changeCamera) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_ChangeCamera];
     [self.ChangeCamera mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.view.mas_right).mas_offset(-20);
         make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-30);
-        make.width.mas_equalTo(30);
-        make.height.mas_equalTo(30);
+        make.width.mas_equalTo(40);
+        make.height.mas_equalTo(40);
     }];
     
     self.preAlbum = [[UIButton alloc] init];
@@ -159,8 +154,8 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.preAlbum mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view.mas_left).mas_offset(20);
         make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-30);
-        make.width.mas_equalTo(50);
-        make.height.mas_equalTo(50);
+        make.width.mas_equalTo(40);
+        make.height.mas_equalTo(40);
     }];
     
     self.flashButton = [[UIButton alloc] init];
@@ -169,21 +164,21 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_flashButton addTarget:self action:@selector(FlashOn) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_flashButton];
     [self.flashButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view.mas_left).mas_offset(20);
+        make.left.mas_equalTo(self.view.mas_left).mas_offset(10);
         make.top.mas_equalTo(self.view.mas_top).mas_offset(10);
-        make.width.mas_equalTo(30);
-        make.height.mas_equalTo(30);
+        make.width.mas_equalTo(20);
+        make.height.mas_equalTo(20);
     }];
     
     self.EffectButton = [[UIButton alloc] init];
-    [self.EffectButton setBackgroundImage:[UIImage imageNamed:@"滤镜"] forState:UIControlStateNormal];
+    [self.EffectButton setBackgroundImage:[UIImage imageNamed:@"Effect icon"] forState:UIControlStateNormal];
     [_EffectButton addTarget:self action:@selector(OpenEffectlist) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_EffectButton];
     [self.EffectButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.view.mas_right).mas_offset(-20);
-        make.top.mas_equalTo(self.view.mas_top).mas_offset(20);
-        make.width.mas_equalTo(30);
-        make.height.mas_equalTo(30);
+        make.right.mas_equalTo(self.view.mas_right).mas_offset(-10);
+        make.top.mas_equalTo(self.view.mas_top).mas_offset(10);
+        make.width.mas_equalTo(20);
+        make.height.mas_equalTo(20);
     }];
     
 }
@@ -200,13 +195,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
         make.right.mas_equalTo(self.view.mas_right).mas_offset(0);
         make.top.mas_equalTo(self.view.mas_top).mas_offset(40);
         make.width.mas_equalTo(APP_SCREEN_WIDTH);
-        make.height.mas_equalTo(APP_SCREEN_HEIGHT-130);
+        make.height.mas_equalTo(APP_SCREEN_HEIGHT-150);
     }];
     [self.preLayerView setFillMode:kGPUImageFillModePreserveAspectRatioAndFill];
     self.preLayerView.userInteractionEnabled = YES;
     // 初始化滤镜
     self.effectTag = 1;
-    
 //    GPUImageColorMatrixFilter *halftone = [[GPUImageColorMatrixFilter alloc] init];//kexing  jia!!!
 ////    halftone.distance = 0.1;
 ////    halftone.slope = 0.2;
@@ -217,8 +211,6 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 //        {0.f, 0.f, 0.f, 1.f}
 //    };
     [_captureCamera addTarget:self.rawFilter];
-//    [self.rawFilter addTarget:halftone];
-//    [halftone addTarget:_preLayerView];
     [self.rawFilter addTarget:_preLayerView];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(focusGesture:)];
@@ -423,7 +415,10 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 -(void) inToAlbum{
     CollectionViewController *cvc = [[CollectionViewController alloc] init];
     cvc.effectTag = _effectTag;
-    [self presentViewController:cvc animated:YES completion:nil];
+    [self.navigationController presentViewController:cvc animated:YES completion:nil];
+//    FiveViewController *fiveCtr=[[FiveViewController alloc]init];
+//    [self.navigationController pushViewController:cvc animated:YES];
+    
 }
 
 
@@ -484,6 +479,14 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _HalftoneFilter;
 }
 
+- (ContrastFilter *) ContrastFilter{
+    if (!_ContrastFilter) {
+        _ContrastFilter = [[ContrastFilter alloc] init];
+    }
+    return _ContrastFilter;
+}
+
+
 - (UIView *) EffectListView {
     if(!_EffectListView){
         _EffectListView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, APP_SCREEN_WIDTH, 30)];
@@ -498,7 +501,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     }
     return _feedBack;
 }
-
+#pragma mark - lazyload 按钮
 - (UIButton *) rawButton{
     if (!_rawButton) {
         _rawButton = [UIButton new];
@@ -553,6 +556,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     }
     return _temButton;
 }
+
 - (MotionManager *)motionManager {
     if(!_motionManager) {
         _motionManager = [[MotionManager alloc] init];
@@ -563,7 +567,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #pragma mark - 选择滤镜
 - (void) openRaw {
     self.effectTag = 1;
-    self.rawButton.selected = !self.rawButton.selected;
+    self.rawButton.selected = YES;
     self.ShaderButton.selected = NO;
     self.lutButton.selected = NO;
     self.halftoneButton.selected = NO;
@@ -663,9 +667,9 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     if(self.captureCamera){
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5f * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
             [self.captureCamera startCameraCapture];
-        });
+//        });
         [self WhiteBallence];
     }
 }

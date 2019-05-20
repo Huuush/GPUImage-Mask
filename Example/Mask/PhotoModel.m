@@ -22,6 +22,7 @@
         /// 当选择后获取原图
         [[PHCachingImageManager defaultManager] requestImageForAsset:self.asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeDefault options:options resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             self.highDefinitionImage = result;
+            NSLog(@"");
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (self.getPictureAction) {
                     self.getPictureAction();
@@ -31,7 +32,4 @@
     });
 }
 
--(void)getPictureAction{
-    
-}
 @end
