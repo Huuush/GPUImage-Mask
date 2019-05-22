@@ -22,6 +22,7 @@
 #import "SaturationFilter.h"
 #import "CompressImg.h"
 
+
 @interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
     UICollectionView * _collectionView;
@@ -32,9 +33,9 @@
 @property (nonatomic, strong) GPUImageCropFilter *rawFilter;
 @property (nonatomic, strong) LutFilter *LutFilter;
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
-//@property (nonatomic, strong) RGBFilter *RGBFilter;
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
 @property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
+
 @end
 
 @implementation CollectionViewController
@@ -312,11 +313,12 @@
     return UIEdgeInsetsMake(0, 10, 0, 10);
 }
 
-////设置每个item垂直间距
+//设置每个item垂直间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
 {
     return 10;
 }
+
 
 - (NSMutableArray *) imgdataArr{
     if (!_imgdataArr) {
@@ -364,7 +366,6 @@
     }
     return _ContrastFilter;
 }
-
 
 
 - (void)didReceiveMemoryWarning {
