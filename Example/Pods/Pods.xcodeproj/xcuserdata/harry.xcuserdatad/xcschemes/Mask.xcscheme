@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'ABA593ECA142A5A5A67B47C08E14304A'
+               BlueprintIdentifier = 'DFEBFF9B1225F990AF8B299DDCD534CF'
                BlueprintName = 'Mask'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Mask.framework'>
