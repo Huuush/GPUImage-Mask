@@ -1,15 +1,15 @@
 //
-//  LutFilter.m
+//  OrangeLUTFilter.m
 //  Mask_Example
 //
-//  Created by Harry on 2019/5/12.
+//  Created by Harry on 2019/5/23.
 //  Copyright © 2019年 Huuush. All rights reserved.
 //
 
-#import "LutFilter.h"
+#import "OrangeLUTFilter.h"
 #import "Lookuptablefilter.h"
 
-@implementation LutFilter
+@implementation OrangeLUTFilter
 
 - (instancetype)init
 {
@@ -19,9 +19,9 @@
     }
     
 #if TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE
-    UIImage *image = [UIImage imageNamed:@"NewLUT.png"];
+    UIImage *image = [UIImage imageNamed:@"OrangeLUT.png"];
 #else
-    NSImage *image = [NSImage imageNamed:@"NewLUT.png"];
+    NSImage *image = [NSImage imageNamed:@"OrangeLUT.png"];
 #endif
     
     NSAssert(image, @"To use GPUImageAmatorkaFilter you need to add lookup_amatorka.png from GPUImage/framework/Resources to your application bundle.");
@@ -38,6 +38,4 @@
     
     return self;
 }
-
-
 @end

@@ -21,12 +21,13 @@
 #import "ContrastFilter.h"
 #import "SaturationFilter.h"
 #import "CompressImg.h"
-#import <YBImageBrowser/YBImageBrowser.h>
+
 
 @interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
     UICollectionView * _collectionView;
 }
+
 @property (nonatomic, strong) NSData *imgData;
 @property (nonatomic, strong) NSMutableArray *imgdataArr;
 @property(nonatomic, strong) NSString *dataStr;
@@ -329,6 +330,7 @@
 //    MainImageCell *cell = (MainImageCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
 //    return cell ? cell.mainImageView : nil;
 //}
+
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     CollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid" forIndexPath:indexPath];
@@ -431,3 +433,5 @@
 */
 
 @end
+
+

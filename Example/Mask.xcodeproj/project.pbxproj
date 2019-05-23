@@ -23,6 +23,9 @@
 		4A20E474228D4C520036E919 /* AlbumCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E473228D4C520036E919 /* AlbumCollectionViewCell.m */; };
 		4A20E478228D4D590036E919 /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A20E477228D4D590036E919 /* AlbumViewController.m */; };
 		4A215BF0228959D500081F61 /* SwirlFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A215BEF228959D500081F61 /* SwirlFilter.m */; };
+		4A22421622968D0D00D80899 /* OrangeLUT.png in Resources */ = {isa = PBXBuildFile; fileRef = 4A22421522968D0D00D80899 /* OrangeLUT.png */; };
+		4A22421922968F3B00D80899 /* OrangeLUTFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A22421822968F3B00D80899 /* OrangeLUTFilter.m */; };
+		4A22421C2296D71600D80899 /* showImgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A22421B2296D71600D80899 /* showImgViewController.m */; };
 		4A263993228ABC2F00CBE8F9 /* ContrastFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */; };
 		4A263999228AE0A100CBE8F9 /* CompressImg.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A263998228AE0A100CBE8F9 /* CompressImg.m */; };
 		4A26399B228AE4A500CBE8F9 /* EffectShowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A26399A228AE4A500CBE8F9 /* EffectShowController.m */; };
@@ -98,6 +101,11 @@
 		4A20E477228D4D590036E919 /* AlbumViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumViewController.m; sourceTree = "<group>"; };
 		4A215BEE228959D500081F61 /* SwirlFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwirlFilter.h; sourceTree = "<group>"; };
 		4A215BEF228959D500081F61 /* SwirlFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SwirlFilter.m; sourceTree = "<group>"; };
+		4A22421522968D0D00D80899 /* OrangeLUT.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = OrangeLUT.png; sourceTree = "<group>"; };
+		4A22421722968F3B00D80899 /* OrangeLUTFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OrangeLUTFilter.h; sourceTree = "<group>"; };
+		4A22421822968F3B00D80899 /* OrangeLUTFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OrangeLUTFilter.m; sourceTree = "<group>"; };
+		4A22421A2296D71600D80899 /* showImgViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = showImgViewController.h; sourceTree = "<group>"; };
+		4A22421B2296D71600D80899 /* showImgViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = showImgViewController.m; sourceTree = "<group>"; };
 		4A263991228ABC2F00CBE8F9 /* ContrastFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContrastFilter.h; sourceTree = "<group>"; };
 		4A263992228ABC2F00CBE8F9 /* ContrastFilter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContrastFilter.m; sourceTree = "<group>"; };
 		4A263997228AE0A000CBE8F9 /* CompressImg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompressImg.h; sourceTree = "<group>"; };
@@ -180,6 +188,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A0E3D432296E4A800CF548B /* YYPhoto */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = YYPhoto;
+			sourceTree = "<group>";
+		};
 		4A1A96C8227D982F00785C9C /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,6 +271,8 @@
 			children = (
 				4A5686132288183C00409941 /* LutFilter.h */,
 				4A5686142288183C00409941 /* LutFilter.m */,
+				4A22421722968F3B00D80899 /* OrangeLUTFilter.h */,
+				4A22421822968F3B00D80899 /* OrangeLUTFilter.m */,
 				4AEA12CB228BF68A007EB20A /* Lookuptablefilter.h */,
 				4AEA12CC228BF68A007EB20A /* Lookuptablefilter.m */,
 				4A263991228ABC2F00CBE8F9 /* ContrastFilter.h */,
@@ -306,6 +323,7 @@
 		6003F593195388D20070C39A /* Example for Mask */ = {
 			isa = PBXGroup;
 			children = (
+				4A0E3D432296E4A800CF548B /* YYPhoto */,
 				4A20E457228D36AF0036E919 /* CustomAlbum */,
 				4AEA12D7228C5032007EB20A /* FilerGroup */,
 				4A1A96C8227D982F00785C9C /* Networking */,
@@ -320,6 +338,8 @@
 				4A29C75E2279E05B002980F3 /* CollectionViewController.m */,
 				4A29C7622279E05C002980F3 /* CollectionViewCell.h */,
 				4A29C7602279E05C002980F3 /* CollectionViewCell.m */,
+				4A22421A2296D71600D80899 /* showImgViewController.h */,
+				4A22421B2296D71600D80899 /* showImgViewController.m */,
 				4A56861922881D7E00409941 /* EffectShowController.h */,
 				4A26399A228AE4A500CBE8F9 /* EffectShowController.m */,
 				4AEA12D4228C5002007EB20A /* editRawViewController.h */,
@@ -335,6 +355,7 @@
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				4A2A3B3C227A8B7600209072 /* IMG_1319.JPG */,
+				4A22421522968D0D00D80899 /* OrangeLUT.png */,
 				4A1EE4C72282BA5A00786DCD /* NewLUT.png */,
 				4A13A10F2289D0E400A76E0D /* CartoonLUT.png */,
 				6003F594195388D20070C39A /* Supporting Files */,
@@ -476,6 +497,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */,
+				4A22421622968D0D00D80899 /* OrangeLUT.png in Resources */,
 				4A2A3B3D227A8B7600209072 /* IMG_1319.JPG in Resources */,
 				71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */,
 				4A1EE4C82282BA5B00786DCD /* NewLUT.png in Resources */,
@@ -588,6 +610,7 @@
 				4AEA12CD228BF68A007EB20A /* Lookuptablefilter.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				4A29C7572279E035002980F3 /* MainViewController.m in Sources */,
+				4A22421922968F3B00D80899 /* OrangeLUTFilter.m in Sources */,
 				4AEA12D6228C5002007EB20A /* editRawViewController.m in Sources */,
 				4A29C7682279E05D002980F3 /* CollectionViewCell.m in Sources */,
 				4A20E45D228D40190036E919 /* HueFilter.m in Sources */,
@@ -601,6 +624,7 @@
 				4A1A96D0227D984600785C9C /* BaseHandlerBusiness.m in Sources */,
 				4A20E478228D4D590036E919 /* AlbumViewController.m in Sources */,
 				4AEA12D0228C1FB0007EB20A /* RGBFilter.m in Sources */,
+				4A22421C2296D71600D80899 /* showImgViewController.m in Sources */,
 				4AEA12D3228C23E2007EB20A /* SaturationFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
