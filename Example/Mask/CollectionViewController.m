@@ -21,6 +21,7 @@
 #import "ContrastFilter.h"
 #import "SaturationFilter.h"
 #import "CompressImg.h"
+#import "YYPhotoBrowserViewController.h"
 
 
 @interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
@@ -38,6 +39,10 @@
 @property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
 @property (nonatomic, copy) NSArray *dataArray;
 
+@property (nonatomic,strong) NSMutableArray *imageArray;//图片数组
+@property (nonatomic,strong) NSMutableArray *imageViewArray;//图片控件数组
+@property (nonatomic,strong) NSMutableArray *imageViewFrameArray;//图片控件在window中的位置
+
 @end
 
 @implementation CollectionViewController
@@ -47,6 +52,7 @@
     [self loadUI];
     [self loadData];
 }
+
 
 - (void) backToCamera {
 //    NSLog(@"点击到了");
@@ -76,6 +82,36 @@
             _imgData = [[NSData alloc] initWithBase64EncodedString:[dataArr[i] valueForKey:@"imagedata"] options:0];
             [self.imgdataArr addObject:_imgData];
         }
+        
+        [self.imgdataArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+           
+            UIImage * img  = [UIImage imageWithData:obj];
+            [self.imageArray addObject: img];
+        }];
+
+        CGFloat leftRightMargin = 10.0;//左右间距
+        CGFloat marginBetweenImage = 10.0;//图片间间距
+        CGFloat imageWidth = 171;//图片宽
+        CGFloat imageHeight = 228;//图片高
+        CGFloat imagesBeginY = 80;
+        for (int i = 0; i < self.imageArray.count; i++)
+        {
+            UIImageView *imageView = [[UIImageView alloc] init];
+            [self.view addSubview:imageView];
+            [self.imageViewArray addObject:imageView];
+            
+            int row = i / 2;
+            int col = i % 2;
+            imageView.frame = CGRectMake(leftRightMargin + col * (imageWidth + marginBetweenImage), imagesBeginY + row * (imageHeight + marginBetweenImage), imageWidth, imageHeight);
+            [self saveWindowFrameWithOriginalFrame:imageView.frame];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            imageView.layer.masksToBounds = YES;
+            imageView.image = self.imageArray[i];
+            imageView.tag = i;
+            imageView.userInteractionEnabled = NO;
+//            [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage:)]];
+        }
+        
         [_collectionView reloadData];
     } Failed:^(NSString *error, NSString *errorDescription) {
         NSLog(@"");
@@ -342,7 +378,20 @@
 //点击放大图片
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 //    [self showBrowserForSimpleCaseWithIndex:indexPath.row];
+    
+
+    YYPhotoBrowserViewController *photo = [[YYPhotoBrowserViewController alloc] initWithImageArray:self.imageArray currentImageIndex:((int)indexPath.row) imageViewArray:self.imageViewArray imageViewFrameArray:self.imageViewFrameArray];
+    [self presentViewController:photo animated:YES completion:nil];
+
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    NSLog(@"");
+    [self.imageViewArray enumerateObjectsUsingBlock:^(UIImageView *  _Nonnull imgV, NSUInteger idx, BOOL * _Nonnull stop) {
+        [imgV removeFromSuperview];
+    }];
+}
+
 
 //每个section的item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -414,6 +463,56 @@
         _ContrastFilter = [[ContrastFilter alloc] init];
     }
     return _ContrastFilter;
+}
+
+
+#pragma mark - 事件响应
+/** 根据图片再view中的位置，算出在window中的位置，并保存 */
+- (void)saveWindowFrameWithOriginalFrame:(CGRect)originalFrame
+{
+    //因为这里恰好在view中的位置就是在window中的位置，所以不需要转frame
+    //因为数组不能存结构体，所以存的时候转成NSValue
+    NSValue *frameValue = [NSValue valueWithCGRect:originalFrame];
+    [self.imageViewFrameArray addObject:frameValue];
+}
+
+///** 点击了图片 */
+//- (void)clickImage:(UITapGestureRecognizer *)tap
+//{
+//    NSInteger tag = tap.view.tag;
+//    NSLog(@"%ld",tag);
+//
+//    YYPhotoBrowserViewController *photo = [[YYPhotoBrowserViewController alloc] initWithImageArray:self.imageArray currentImageIndex:((int)tag) imageViewArray:self.imageViewArray imageViewFrameArray:self.imageViewFrameArray];
+//    [self presentViewController:photo animated:YES completion:nil];
+//}
+
+#pragma mark - 懒加载
+
+- (NSMutableArray *)imageArray
+{
+    if (!_imageArray)
+    {
+        _imageArray = [NSMutableArray array];
+    }
+    return _imageArray;
+}
+
+- (NSMutableArray *)imageViewArray
+{
+    if (!_imageViewArray)
+    {
+        _imageViewArray = [NSMutableArray array];
+    }
+    return _imageViewArray;
+}
+
+- (NSMutableArray *)imageViewFrameArray
+{
+    if (!_imageViewFrameArray)
+    {
+        _imageViewFrameArray = [NSMutableArray array];
+    }
+    return _imageViewFrameArray;
 }
 
 
