@@ -21,7 +21,7 @@
 #import "ContrastFilter.h"
 #import "SaturationFilter.h"
 #import "CompressImg.h"
-
+#import <YBImageBrowser/YBImageBrowser.h>
 
 @interface CollectionViewController ()<UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,UICollectionViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 {
@@ -35,6 +35,7 @@
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
 @property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
+@property (nonatomic, copy) NSArray *dataArray;
 
 @end
 
@@ -47,7 +48,7 @@
 }
 
 - (void) backToCamera {
-    NSLog(@"点击到了");
+//    NSLog(@"点击到了");
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -64,6 +65,7 @@
 }
 
 - (void)loadData{
+    [self.imgdataArr removeAllObjects];
     NSDictionary *getfordata = @{
                               @"effecttag":@(self.effectTag)
                                };
@@ -116,10 +118,13 @@
         make.height.mas_equalTo(30);
     }];
 }
-//pickimage
+//pickimage   处理图片的大小
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(nullable NSDictionary<NSString *,id> *)editingInfo {
+    
     NSLog(@"aaa");
+    
     GPUImagePicture *sourcePicture = [[GPUImagePicture alloc] initWithImage:image];
+    
     if (_effectTag == 1) {
         [self.rawFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
         [self.rawFilter useNextFrameForImageCapture];
@@ -142,9 +147,14 @@
                                        } mutableCopy];
         [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"上传成功！");
+            
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
+            [self loadData];
+            
         }];
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if (_effectTag == 2) {
         GPUImageFilterGroup *filterGroup = [[GPUImageFilterGroup alloc] init];
@@ -179,9 +189,14 @@
                                        } mutableCopy];
         [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"上传成功！");
+            
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
+            [self loadData];
+            
         }];
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if (_effectTag == 3){
         [self.LutFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
@@ -205,9 +220,13 @@
                                        } mutableCopy];
         [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"上传成功！");
+            
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
+            [self loadData];
         }];
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if(_effectTag == 4){
         [self.HalftoneFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
@@ -235,9 +254,13 @@
                                        } mutableCopy];
         [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"上传成功！");
+            
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
+            [self loadData];
         }];
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if (_effectTag == 5){
         GPUImageFilterGroup *filterGroup = [[GPUImageFilterGroup alloc] init];
@@ -273,15 +296,39 @@
                                        } mutableCopy];
         [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
             NSLog(@"上传成功！");
+            
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
+            [self loadData];
+            
         }];
     }
 
-    [self loadData];
     [self dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
+//- (void)showBrowserForSimpleCaseWithIndex:(NSInteger)index {
+//    //str 可以是从网上加载来的datastr
+//    NSMutableArray *browserDataArr = [NSMutableArray array];
+//
+//    [self.dataArray enumerateObjectsUsingBlock:^(NSString *_Nonnull urlStr, NSUInteger idx, BOOL * _Nonnull stop) {
+//
+//        YBImageBrowseCellData *data = [YBImageBrowseCellData new];
+//        data.url = [NSURL URLWithString:urlStr];
+//        data.sourceObject = [self sourceObjAtIdx:idx];
+//        [browserDataArr addObject:data];
+//    }];
+//
+//    YBImageBrowser *browser = [YBImageBrowser new];
+//    browser.dataSourceArray = browserDataArr;
+//    browser.currentIndex = index;
+//    [browser show];
+//}
+//- (id)sourceObjAtIdx:(NSInteger)idx {
+//    MainImageCell *cell = (MainImageCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:idx inSection:0]];
+//    return cell ? cell.mainImageView : nil;
+//}
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     
     CollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cellid" forIndexPath:indexPath];
@@ -292,7 +339,7 @@
 }
 //点击放大图片
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
+//    [self showBrowserForSimpleCaseWithIndex:indexPath.row];
 }
 
 //每个section的item个数

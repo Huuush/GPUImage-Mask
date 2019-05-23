@@ -359,6 +359,22 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
+    else if(self.effectTag == 5)
+    {
+        
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.ContrastFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
+            //                self.orientation = orientation;
+            //                NSLog(@"设备方向：%ld",orientation);
+            //                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }
     
     [self.captureCamera stopCameraCapture];
     
@@ -643,13 +659,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [_feedBack impactOccurred];
     [self.captureCamera removeAllTargets];
     GPUImageWhiteBalanceFilter *WhiteBalanceFilter = [GPUImageWhiteBalanceFilter new];
-    GPUImageContrastFilter * contrastFilter = [GPUImageContrastFilter new];
-    contrastFilter.contrast = 0.7;
+
+    self.ContrastFilter.contrast = 0.7;
     WhiteBalanceFilter.temperature = 4000;
-//    self.ContrastFilter.contrast = 0.7;
+
     [self.captureCamera addTarget:WhiteBalanceFilter];
-    [WhiteBalanceFilter addTarget:contrastFilter];
-    [contrastFilter addTarget:_preLayerView];
+    [WhiteBalanceFilter addTarget:self.ContrastFilter];
+    [self.ContrastFilter addTarget:_preLayerView];
 }
 
 - (void)WhiteBallence{
