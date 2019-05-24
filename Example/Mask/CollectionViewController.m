@@ -18,6 +18,7 @@
 #import "PhotosManager.h"
 #import "GPUImage.h"
 #import "LutFilter.h"
+#import "OrangeLUTFilter.h"
 #import "ContrastFilter.h"
 #import "SaturationFilter.h"
 #import "CompressImg.h"
@@ -34,6 +35,7 @@
 @property(nonatomic, strong) NSString *dataStr;
 @property (nonatomic, strong) GPUImageCropFilter *rawFilter;
 @property (nonatomic, strong) LutFilter *LutFilter;
+@property (nonatomic, strong) OrangeLUTFilter *OrangeLUTFilter;
 @property (nonatomic, strong) ContrastFilter *ContrastFilter;
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
 @property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
@@ -73,6 +75,8 @@
 
 - (void)loadData{
     [self.imgdataArr removeAllObjects];
+    [self.imageViewArray removeAllObjects];
+    [self.imageArray removeAllObjects];
     NSDictionary *getfordata = @{
                               @"effecttag":@(self.effectTag)
                                };
@@ -82,13 +86,10 @@
             _imgData = [[NSData alloc] initWithBase64EncodedString:[dataArr[i] valueForKey:@"imagedata"] options:0];
             [self.imgdataArr addObject:_imgData];
         }
-        
         [self.imgdataArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-           
             UIImage * img  = [UIImage imageWithData:obj];
             [self.imageArray addObject: img];
         }];
-
         CGFloat leftRightMargin = 10.0;//左右间距
         CGFloat marginBetweenImage = 10.0;//图片间间距
         CGFloat imageWidth = 171;//图片宽
@@ -97,6 +98,7 @@
         for (int i = 0; i < self.imageArray.count; i++)
         {
             UIImageView *imageView = [[UIImageView alloc] init];
+            
             [self.view addSubview:imageView];
             [self.imageViewArray addObject:imageView];
             
@@ -111,7 +113,6 @@
             imageView.userInteractionEnabled = NO;
 //            [imageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage:)]];
         }
-        
         [_collectionView reloadData];
     } Failed:^(NSString *error, NSString *errorDescription) {
         NSLog(@"");
@@ -168,6 +169,7 @@
         [sourcePicture addTarget:self.rawFilter];
         [sourcePicture processImage];
         UIImage *newImage = [self.rawFilter imageFromCurrentFramebuffer];
+        [self saveImageToPhotoAlbum:newImage];
         //开始上传
         CompressImg * compress = [CompressImg new];
         UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
@@ -188,9 +190,7 @@
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
             [self loadData];
-            
         }];
-        
         [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if (_effectTag == 2) {
@@ -210,6 +210,7 @@
         [sourcePicture processImage];
         
         UIImage *newImage = [filterGroup imageFromCurrentFramebuffer];
+        [self saveImageToPhotoAlbum:newImage];
         //开始上传
         CompressImg * compress = [CompressImg new];
         UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
@@ -230,9 +231,7 @@
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
             NSLog(@"上传成功！");
             [self loadData];
-            
         }];
-        
         [self dismissViewControllerAnimated:YES completion:nil];
     }
     else if (_effectTag == 3){
@@ -241,6 +240,7 @@
         [sourcePicture addTarget:self.LutFilter];
         [sourcePicture processImage];
         UIImage *newImage = [self.LutFilter imageFromCurrentFramebuffer];
+        [self saveImageToPhotoAlbum:newImage];
         //开始上传
         CompressImg * compress = [CompressImg new];
         UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
@@ -275,6 +275,7 @@
         [sourcePicture processImage];
         
         UIImage *newImage = [self.HalftoneFilter imageFromCurrentFramebuffer];
+        [self saveImageToPhotoAlbum:newImage];
         //开始上传
         CompressImg * compress = [CompressImg new];
         UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
@@ -317,6 +318,7 @@
         [sourcePicture processImage];
         
         UIImage *newImage = [filterGroup imageFromCurrentFramebuffer];
+        [self saveImageToPhotoAlbum:newImage];
         //开始上传
         CompressImg * compress = [CompressImg new];
         UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
@@ -339,9 +341,38 @@
             [self loadData];
             
         }];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
-
-    [self dismissViewControllerAnimated:YES completion:nil];
+    else if (_effectTag == 6){
+        [self.OrangeLUTFilter forceProcessingAtSizeRespectingAspectRatio:image.size];
+        [self.OrangeLUTFilter useNextFrameForImageCapture];
+        [sourcePicture addTarget:self.OrangeLUTFilter];
+        [sourcePicture processImage];
+        UIImage *newImage = [self.OrangeLUTFilter imageFromCurrentFramebuffer];
+        [self saveImageToPhotoAlbum:newImage];
+        //开始上传
+        CompressImg * compress = [CompressImg new];
+        UIImage * postimg = [compress imageWithImage:newImage scaledToSize:CGSizeMake(375, 500)];
+        self.imgData = UIImageJPEGRepresentation(postimg,0.5f);//第二个参数为压缩倍数
+        
+        NSData *base64Data = [self.imgData base64EncodedDataWithOptions:0];
+        self.dataStr = [[NSString alloc] initWithData:base64Data encoding:NSUTF8StringEncoding];
+        AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+        session.requestSerializer = [AFJSONRequestSerializer serializer];
+        NSMutableDictionary * dic = [@{
+                                       @"userId":@"1",
+                                       @"imgData":self.dataStr,
+                                       @"effectTag":@(self.effectTag),
+                                       } mutableCopy];
+        [session POST:@"http://172.20.10.3:3000/addPhoto" parameters:dic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+            NSLog(@"上传成功！");
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            NSLog(@"上传成功！");
+            [self loadData];
+        }];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
     
 }
 
@@ -378,9 +409,9 @@
 //点击放大图片
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
 //    [self showBrowserForSimpleCaseWithIndex:indexPath.row];
-    
 
     YYPhotoBrowserViewController *photo = [[YYPhotoBrowserViewController alloc] initWithImageArray:self.imageArray currentImageIndex:((int)indexPath.row) imageViewArray:self.imageViewArray imageViewFrameArray:self.imageViewFrameArray];
+    photo.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     [self presentViewController:photo animated:YES completion:nil];
 
 }
@@ -464,7 +495,12 @@
     }
     return _ContrastFilter;
 }
-
+- (OrangeLUTFilter *)OrangeLUTFilter{
+    if (!_OrangeLUTFilter) {
+        _OrangeLUTFilter = [OrangeLUTFilter new];
+    }
+    return _OrangeLUTFilter;
+}
 
 #pragma mark - 事件响应
 /** 根据图片再view中的位置，算出在window中的位置，并保存 */
@@ -515,6 +551,16 @@
     return _imageViewFrameArray;
 }
 
+- (void)saveImageToPhotoAlbum:(UIImage*)savedImage
+{
+    
+    UIImageWriteToSavedPhotosAlbum(savedImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+    
+}
+
+// 指定回调方法
+- (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo{
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

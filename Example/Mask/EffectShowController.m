@@ -167,7 +167,6 @@
 
 // 指定回调方法
 - (void)image: (UIImage *) image didFinishSavingWithError: (NSError *) error contextInfo: (void *) contextInfo
-
 {
 //    NSString *msg = nil ;
 //    if(error != NULL){

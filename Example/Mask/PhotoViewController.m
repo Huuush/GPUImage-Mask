@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 #import "EffectShowController.h"
 #import "editRawViewController.h"
 #import "LutFilter.h"
+#import "OrangeLUTFilter.h"
 #import "SwirlFilter.h"
 #import "ContrastFilter.h"
 #import "RGBFilter.h"
@@ -65,6 +66,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (strong, nonatomic) UIButton *lutButton;
 @property (strong, nonatomic) UIButton *halftoneButton;
 @property (strong, nonatomic) UIButton *temButton;
+@property (strong, nonatomic) UIButton *orangeButton;
 
 @property (nonatomic, strong) UIView *EffectListView;
 @property (nonatomic, strong) GPUImageView *preLayerView;
@@ -78,6 +80,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 @property (nonatomic, strong) RGBFilter *RGBFilter;
 @property (nonatomic, strong) SaturationFilter *SaturationFilter;
 @property (nonatomic, strong) GPUImageHalftoneFilter *HalftoneFilter;
+@property (nonatomic, strong) OrangeLUTFilter *OrangeLUTFilter;
 
 /* 获取屏幕方向 */
 @property (nonatomic, assign) UIDeviceOrientation orientation;
@@ -375,6 +378,22 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
             [self.navigationController pushViewController:evc animated:YES];
         }];
     }
+    else if(self.effectTag == 6)
+    {
+        
+        [self.captureCamera capturePhotoAsImageProcessedUpToFilter:self.OrangeLUTFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+            //                //开启陀螺仪监测设备方向，motionManager必须设置为全局强引用属性，否则无法开启陀螺仪监测；
+            //                [self.motionManager startMotionManager:^(NSInteger orientation) {
+            //                self.orientation = orientation;
+            //                NSLog(@"设备方向：%ld",orientation);
+            //                }];
+            _image = processedImage;
+            EffectShowController *evc = [[EffectShowController alloc] init];
+            evc.EffectedImg = _image;
+            evc.effectTag = _effectTag;
+            [self.navigationController pushViewController:evc animated:YES];
+        }];
+    }
     
     [self.captureCamera stopCameraCapture];
     
@@ -415,6 +434,13 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [self.EffectListView addSubview:self.temButton];
     [self.temButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.halftoneButton.mas_right).mas_offset(10);
+        make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
+        make.width.mas_equalTo(50);
+        make.height.mas_equalTo(30);
+    }];
+    [self.EffectListView addSubview:self.orangeButton];
+    [self.orangeButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.temButton.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.EffectListView.mas_top).mas_offset(2);
         make.width.mas_equalTo(50);
         make.height.mas_equalTo(30);
@@ -502,6 +528,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _ContrastFilter;
 }
 
+- (OrangeLUTFilter *)OrangeLUTFilter{
+    if (!_OrangeLUTFilter) {
+        _OrangeLUTFilter = [OrangeLUTFilter new];
+    }
+    return _OrangeLUTFilter;
+}
 
 - (UIView *) EffectListView {
     if(!_EffectListView){
@@ -573,6 +605,18 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     return _temButton;
 }
 
+- (UIButton *)orangeButton{
+    if (!_orangeButton) {
+        _orangeButton = [UIButton new];
+        [_orangeButton setTitle:@"橙色" forState:UIControlStateNormal];
+        _orangeButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [_orangeButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [_orangeButton addTarget:self action:@selector(openorangelut) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _orangeButton;
+}
+
+
 - (MotionManager *)motionManager {
     if(!_motionManager) {
         _motionManager = [[MotionManager alloc] init];
@@ -588,6 +632,7 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     self.lutButton.selected = NO;
     self.halftoneButton.selected = NO;
     self.temButton.selected = NO;
+    self.orangeButton.selected = NO;
     
     [self.rawButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
@@ -598,11 +643,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openShader {
     self.effectTag = 2;
-    self.ShaderButton.selected = !self.ShaderButton.selected;
+    self.ShaderButton.selected = YES;
     self.rawButton.selected = NO;
     self.lutButton.selected = NO;
     self.halftoneButton.selected = NO;
     self.temButton.selected = NO;
+    self.orangeButton.selected = NO;
     
     [self.ShaderButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
@@ -616,11 +662,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openLutFilter{
     self.effectTag = 3;
-    self.lutButton.selected = !self.lutButton.selected;
+    self.lutButton.selected = YES;
     self.rawButton.selected = NO;
     self.ShaderButton.selected = NO;
     self.halftoneButton.selected = NO;
     self.temButton.selected = NO;
+    self.orangeButton.selected = NO;
     
     [self.lutButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
@@ -631,11 +678,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) openhalftone{
     self.effectTag = 4;
-    self.halftoneButton.selected = !self.halftoneButton.selected;
+    self.halftoneButton.selected = YES;
     self.rawButton.selected = NO;
     self.ShaderButton.selected = NO;
     self.lutButton.selected = NO;
     self.temButton.selected = NO;
+    self.orangeButton.selected = NO;
     
     [self.halftoneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
@@ -649,11 +697,12 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
 
 - (void) opentem{
     self.effectTag = 5;
-    self.temButton.selected = !self.temButton.selected;
+    self.temButton.selected = YES;
     self.rawButton.selected = NO;
     self.ShaderButton.selected = NO;
     self.lutButton.selected = NO;
     self.halftoneButton.selected = NO;
+    self.orangeButton.selected = NO;
     
     [self.temButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [_feedBack impactOccurred];
@@ -667,6 +716,23 @@ typedef NS_ENUM(NSInteger, CameraFlashMode) {
     [WhiteBalanceFilter addTarget:self.ContrastFilter];
     [self.ContrastFilter addTarget:_preLayerView];
 }
+
+- (void)openorangelut{
+    self.effectTag = 6;
+    self.orangeButton.selected = YES;
+    self.temButton.selected = NO;
+    self.rawButton.selected = NO;
+    self.ShaderButton.selected = NO;
+    self.lutButton.selected = NO;
+    self.halftoneButton.selected = NO;
+    
+    [self.orangeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [_feedBack impactOccurred];
+    [self.captureCamera removeAllTargets];
+    [self.captureCamera addTarget:self.OrangeLUTFilter];
+    [self.OrangeLUTFilter addTarget:_preLayerView];
+}
+
 
 - (void)WhiteBallence{
     if ([self.captureCamera.inputCamera lockForConfiguration:nil]) {
